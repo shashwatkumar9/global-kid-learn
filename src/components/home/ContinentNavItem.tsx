@@ -1,25 +1,28 @@
 
 import * as React from "react";
+import {
+  NavigationMenuItem,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
+} from "@/components/ui/navigation-menu";
 import { ContinentInfo } from "@/data/continentData";
 import { CountryItem } from "./CountryItem";
 
-interface ContinentButtonProps {
+interface ContinentNavItemProps {
   continent: string;
   continentInfo: ContinentInfo;
 }
 
-export const ContinentButton = ({ continent, continentInfo }: ContinentButtonProps) => {
+export const ContinentNavItem = ({ continent, continentInfo }: ContinentNavItemProps) => {
   return (
-    <div className="group relative">
-      <button 
-        className={`text-sm font-semibold ${continentInfo.color} ${continentInfo.bgColor} border border-gray-200 rounded-lg px-4 py-2 shadow-sm transition-all duration-200 hover:shadow-md hover:scale-105`}
+    <NavigationMenuItem>
+      <NavigationMenuTrigger 
+        className={`text-sm font-semibold ${continentInfo.color} ${continentInfo.bgColor} border border-gray-200 rounded-lg px-4 py-2 shadow-sm transition-all duration-200 hover:shadow-md data-[state=open]:scale-105 hover:scale-105 [&>svg]:hidden focus:ring-0 focus:ring-offset-0`}
       >
         <span className={continentInfo.hoverColor}>{continent}</span>
-      </button>
-      
-      {/* Mega Menu Dropdown */}
-      <div className="absolute top-full left-0 w-[1200px] pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[100]">
-        <div className="bg-white shadow-2xl border rounded-lg overflow-visible">
+      </NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <div className="w-[1200px] bg-white shadow-lg border rounded-lg overflow-visible">
           <div className="flex">
             {/* Countries Column */}
             <div className="w-56 bg-gray-50 border-r border-gray-200">
@@ -54,7 +57,7 @@ export const ContinentButton = ({ continent, continentInfo }: ContinentButtonPro
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
   );
 };
