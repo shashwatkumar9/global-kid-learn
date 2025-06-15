@@ -9,6 +9,27 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      content_access: {
+        Row: {
+          content_type: string
+          created_at: string | null
+          id: string
+          requires_subscription: boolean | null
+        }
+        Insert: {
+          content_type: string
+          created_at?: string | null
+          id?: string
+          requires_subscription?: boolean | null
+        }
+        Update: {
+          content_type?: string
+          created_at?: string | null
+          id?: string
+          requires_subscription?: boolean | null
+        }
+        Relationships: []
+      }
       parent_student_relationships: {
         Row: {
           created_at: string | null
@@ -57,6 +78,8 @@ export type Database = {
           id: string
           last_name: string
           role: Database["public"]["Enums"]["user_role"]
+          subscription_end: string | null
+          subscription_status: string | null
           updated_at: string | null
           username: string
         }
@@ -68,6 +91,8 @@ export type Database = {
           id: string
           last_name: string
           role: Database["public"]["Enums"]["user_role"]
+          subscription_end?: string | null
+          subscription_status?: string | null
           updated_at?: string | null
           username: string
         }
@@ -79,6 +104,8 @@ export type Database = {
           id?: string
           last_name?: string
           role?: Database["public"]["Enums"]["user_role"]
+          subscription_end?: string | null
+          subscription_status?: string | null
           updated_at?: string | null
           username?: string
         }
@@ -159,6 +186,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          stripe_customer_id: string | null
+          subscribed: boolean
+          subscription_end: string | null
+          subscription_tier: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          stripe_customer_id?: string | null
+          subscribed?: boolean
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          stripe_customer_id?: string | null
+          subscribed?: boolean
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
       }
     }
     Views: {

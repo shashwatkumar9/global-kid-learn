@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,8 @@ import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { useSubscription } from "@/contexts/SubscriptionContext";
+import { CreateChildAccount } from "@/components/CreateChildAccount";
 import { 
   Users, 
   UserPlus, 
@@ -17,7 +18,9 @@ import {
   GraduationCap,
   Globe,
   Calendar,
-  Trophy
+  Trophy,
+  Crown,
+  CreditCard
 } from "lucide-react";
 
 const ParentDashboard = () => {
@@ -28,8 +31,10 @@ const ParentDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [connectingChild, setConnectingChild] = useState(false);
   const [childEmail, setChildEmail] = useState("");
+  const [showCreateChild, setShowCreateChild] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { subscribed, subscriptionTier, subscriptionEnd, checkSubscription } = useSubscription();
 
   useEffect(() => {
     getUser();
@@ -196,6 +201,12 @@ const ParentDashboard = () => {
                 <span>{profile?.country}</span>
               </Badge>
               <Badge variant="outline">{children.length} Children</Badge>
+              {subscribed && (
+                <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center space-x-1">
+                  <Crown className="w-3 h-3" />
+                  <span>Premium</span>
+                </Badge>
+              )}
               <Button variant="outline" size="sm" onClick={handleLogout}>
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
@@ -212,38 +223,118 @@ const ParentDashboard = () => {
           <p className="text-blue-100">Monitor your children's learning progress and achievements.</p>
         </div>
 
-        {/* Connect Child Section */}
-        <Card className="mb-8">
+        {/* Subscription Status */}
+        <Card className={`mb-8 ${subscribed ? 'border-green-200 bg-green-50' : 'border-orange-200 bg-orange-50'}`}>
           <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <UserPlus className="h-5 w-5" />
-              <span>Connect a Child</span>
+            <CardTitle className={`flex items-center space-x-2 ${subscribed ? 'text-green-800' : 'text-orange-800'}`}>
+              <CreditCard className="h-5 w-5" />
+              <span>Subscription Status</span>
             </CardTitle>
-            <CardDescription>
-              Enter your child's email address to connect their account
+            <CardDescription className={subscribed ? 'text-green-700' : 'text-orange-700'}>
+              {subscribed 
+                ? `You have an active ${subscriptionTier} subscription${subscriptionEnd ? ` until ${new Date(subscriptionEnd).toLocaleDateString()}` : ''}`
+                : 'Upgrade to premium to unlock all features and create child accounts'
+              }
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={connectChild} className="flex gap-4">
-              <div className="flex-1">
-                <Label htmlFor="childEmail">Child's Email Address</Label>
-                <Input
-                  id="childEmail"
-                  type="email"
-                  value={childEmail}
-                  onChange={(e) => setChildEmail(e.target.value)}
-                  placeholder="Enter child's email"
-                  required
-                />
-              </div>
-              <div className="flex items-end">
-                <Button type="submit" disabled={connectingChild}>
-                  {connectingChild ? "Connecting..." : "Connect Child"}
+            <div className="flex gap-4">
+              <Button 
+                onClick={() => navigate("/subscription")}
+                variant={subscribed ? "outline" : "default"}
+                className={!subscribed ? "bg-gradient-to-r from-blue-600 to-purple-600" : ""}
+              >
+                {subscribed ? "Manage Subscription" : "Upgrade to Premium"}
+              </Button>
+              {subscribed && (
+                <Button onClick={checkSubscription} variant="ghost" size="sm">
+                  Refresh Status
                 </Button>
-              </div>
-            </form>
+              )}
+            </div>
           </CardContent>
         </Card>
+
+        {/* Child Account Management - Only for Premium Users */}
+        {subscribed ? (
+          <div className="space-y-8">
+            {/* Connect Existing Child */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <UserPlus className="h-5 w-5" />
+                  <span>Connect Existing Child Account</span>
+                </CardTitle>
+                <CardDescription>
+                  Enter your child's email address to connect their existing account
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={connectChild} className="flex gap-4">
+                  <div className="flex-1">
+                    <Label htmlFor="childEmail">Child's Email Address</Label>
+                    <Input
+                      id="childEmail"
+                      type="email"
+                      value={childEmail}
+                      onChange={(e) => setChildEmail(e.target.value)}
+                      placeholder="Enter child's email"
+                      required
+                    />
+                  </div>
+                  <div className="flex items-end">
+                    <Button type="submit" disabled={connectingChild}>
+                      {connectingChild ? "Connecting..." : "Connect Child"}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+
+            {/* Create New Child Account */}
+            {!showCreateChild ? (
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="text-center">
+                    <h3 className="text-lg font-medium mb-2">Or Create a New Child Account</h3>
+                    <p className="text-gray-600 mb-4">Create a student account for your child with username and password</p>
+                    <Button onClick={() => setShowCreateChild(true)}>
+                      <UserPlus className="w-4 h-4 mr-2" />
+                      Create New Child Account
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-4">
+                <Button variant="outline" onClick={() => setShowCreateChild(false)}>
+                  Cancel
+                </Button>
+                <CreateChildAccount onChildCreated={() => {
+                  setShowCreateChild(false);
+                  getUser();
+                }} />
+              </div>
+            )}
+          </div>
+        ) : (
+          <Card className="text-center py-12">
+            <CardContent>
+              <Crown className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Premium Feature</h3>
+              <p className="text-gray-600 mb-4">
+                Upgrade to premium to create and manage child accounts.
+              </p>
+              <Button 
+                onClick={() => navigate("/subscription")}
+                className="bg-gradient-to-r from-blue-600 to-purple-600"
+              >
+                <Crown className="w-4 h-4 mr-2" />
+                Upgrade to Premium
+              </Button>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Children Overview */}
         {children.length > 0 ? (
