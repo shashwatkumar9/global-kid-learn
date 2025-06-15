@@ -56,7 +56,9 @@ const SubjectGradeCurriculumQuizPage = () => {
       const transformedQuestions: Question[] = (data || []).map(question => ({
         id: question.id,
         question_text: question.question_text,
-        options: Array.isArray(question.options) ? question.options : [],
+        options: Array.isArray(question.options) 
+          ? question.options.map(option => String(option))
+          : [],
         correct_answer: question.correct_answer,
         explanation: question.explanation || '',
         is_premium: question.is_premium || false,
