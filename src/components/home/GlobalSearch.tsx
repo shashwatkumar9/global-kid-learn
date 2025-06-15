@@ -110,6 +110,106 @@ const subjectGradeCurriculumCombinations = allSubjects.flatMap(subject =>
   )
 ).filter((v,i,a)=>a.findIndex(t=>(t.title === v.title))===i);
 
+// Specific US curriculum content pages
+const usSpecificPages = [
+  // Common Core Mathematics by Grade
+  {
+    title: 'Mathematics - Grade K - Common Core (USA)',
+    href: '/subjects/mathematics/grades/grade-k/curriculums/common-core',
+    description: 'Kindergarten Mathematics with Common Core standards',
+    type: 'Specific Content' as const,
+    icon: BookOpen,
+  },
+  {
+    title: 'Mathematics - Grade 1 - Common Core (USA)',
+    href: '/subjects/mathematics/grades/grade-1/curriculums/common-core',
+    description: 'First Grade Mathematics with Common Core standards',
+    type: 'Specific Content' as const,
+    icon: BookOpen,
+  },
+  {
+    title: 'Mathematics - Grade 2 - Common Core (USA)',
+    href: '/subjects/mathematics/grades/grade-2/curriculums/common-core',
+    description: 'Second Grade Mathematics with Common Core standards',
+    type: 'Specific Content' as const,
+    icon: BookOpen,
+  },
+  // English Language Arts by Grade
+  {
+    title: 'English Language Arts - Grade K - Common Core (USA)',
+    href: '/subjects/english-language-arts/grades/grade-k/curriculums/common-core',
+    description: 'Kindergarten English Language Arts with Common Core standards',
+    type: 'Specific Content' as const,
+    icon: BookOpen,
+  },
+  {
+    title: 'English Language Arts - Grade 1 - Common Core (USA)',
+    href: '/subjects/english-language-arts/grades/grade-1/curriculums/common-core',
+    description: 'First Grade English Language Arts with Common Core standards',
+    type: 'Specific Content' as const,
+    icon: BookOpen,
+  },
+  // Science by Grade
+  {
+    title: 'Science - Grade K - Next Generation Science Standards (USA)',
+    href: '/subjects/science/grades/grade-k/curriculums/next-generation-science-standards',
+    description: 'Kindergarten Science with Next Generation Science Standards',
+    type: 'Specific Content' as const,
+    icon: BookOpen,
+  },
+  {
+    title: 'Science - Grade 1 - Next Generation Science Standards (USA)',
+    href: '/subjects/science/grades/grade-1/curriculums/next-generation-science-standards',
+    description: 'First Grade Science with Next Generation Science Standards',
+    type: 'Specific Content' as const,
+    icon: BookOpen,
+  },
+  // Theory pages
+  {
+    title: 'Counting and Cardinality Basics - Grade K Math',
+    href: '/subjects/mathematics/grades/grade-k/curriculums/common-core/theory',
+    description: 'Kindergarten Math theory on counting and number basics',
+    type: 'Theory Content' as const,
+    icon: Book,
+  },
+  {
+    title: 'Addition and Subtraction Within 20 - Grade 1 Math',
+    href: '/subjects/mathematics/grades/grade-1/curriculums/common-core/theory',
+    description: 'First Grade Math theory on addition and subtraction',
+    type: 'Theory Content' as const,
+    icon: Book,
+  },
+  {
+    title: 'Place Value and Three-Digit Numbers - Grade 2 Math',
+    href: '/subjects/mathematics/grades/grade-2/curriculums/common-core/theory',
+    description: 'Second Grade Math theory on place value concepts',
+    type: 'Theory Content' as const,
+    icon: Book,
+  },
+  // Quiz pages
+  {
+    title: 'Grade K Math Quiz - Common Core',
+    href: '/subjects/mathematics/grades/grade-k/curriculums/common-core/quiz',
+    description: 'Kindergarten Mathematics quiz questions',
+    type: 'Quiz Content' as const,
+    icon: BookOpen,
+  },
+  {
+    title: 'Grade 1 Math Quiz - Common Core',
+    href: '/subjects/mathematics/grades/grade-1/curriculums/common-core/quiz',
+    description: 'First Grade Mathematics quiz questions',
+    type: 'Quiz Content' as const,
+    icon: BookOpen,
+  },
+  {
+    title: 'Grade 2 Math Quiz - Common Core',
+    href: '/subjects/mathematics/grades/grade-2/curriculums/common-core/quiz',
+    description: 'Second Grade Mathematics quiz questions',
+    type: 'Quiz Content' as const,
+    icon: BookOpen,
+  },
+];
+
 export const GlobalSearch = () => {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
@@ -190,6 +290,19 @@ export const GlobalSearch = () => {
           <CommandSeparator />
           <CommandGroup heading="Curriculums">
             {curriculums.map((item) => (
+              <CommandItem
+                key={item.href}
+                onSelect={() => runCommand(() => navigate(item.href))}
+              >
+                <item.icon className="mr-2 h-4 w-4" />
+                <span>{item.title}</span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          
+          <CommandSeparator />
+          <CommandGroup heading="US Curriculum Content">
+            {usSpecificPages.slice(0, 15).map((item) => (
               <CommandItem
                 key={item.href}
                 onSelect={() => runCommand(() => navigate(item.href))}
