@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { 
   GraduationCap, 
-  LogIn, 
   UserCheck,
   Crown,
   Phone,
@@ -69,7 +68,7 @@ export const Header = ({ user, profile, onDashboardNavigation }: HeaderProps) =>
             </div>
             
             <div className="flex items-center space-x-4">
-              {user ? (
+              {user && (
                 <div className="flex items-center space-x-4">
                   {subscribed && (
                     <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center space-x-1">
@@ -92,23 +91,13 @@ export const Header = ({ user, profile, onDashboardNavigation }: HeaderProps) =>
                     {subscribed ? "Manage" : "Upgrade"}
                   </Button>
                 </div>
-              ) : (
-                <div className="flex items-center space-x-2">
-                  <Button variant="outline" onClick={() => navigate("/auth")} size="sm">
-                    <LogIn className="w-4 h-4 mr-2" />
-                    Sign In
-                  </Button>
-                  <Button onClick={() => navigate("/subscription")} size="sm">
-                    Subscribe
-                  </Button>
-                </div>
               )}
             </div>
           </div>
         </div>
       </header>
 
-      {/* Countries & Curriculums Menu Bar */}
+      {/* Countries Menu Bar */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-center items-center h-12">

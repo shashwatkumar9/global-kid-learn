@@ -216,69 +216,76 @@ const ListItem = React.forwardRef<
 });
 ListItem.displayName = "ListItem";
 
+// Get all countries with their continent colors
+const getAllCountriesWithColors = () => {
+  const countries: Array<{ name: string; color: string; data: any }> = [];
+  Object.entries(continentData).forEach(([continent, continentInfo]) => {
+    continentInfo.countries.forEach(country => {
+      countries.push({
+        name: country.name,
+        color: continentInfo.color,
+        data: country
+      });
+    });
+  });
+  return countries;
+};
+
 export const ContinentCountriesMenu = () => {
+  const allCountries = getAllCountriesWithColors();
+
   return (
     <NavigationMenu>
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-base font-semibold">Countries & Curriculums</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <div className="w-[1400px] p-6">
-              <div className="grid grid-cols-6 gap-6">
-                {Object.entries(continentData).map(([continent, data]) => (
-                  <div key={continent} className="flex flex-col">
-                    <h2 className={`font-bold text-lg mb-4 ${data.color} border-b border-gray-200 pb-2`}>
-                      {continent}
-                    </h2>
-                    {data.countries.map((country) => (
-                      <div key={country.name} className="mb-4">
-                        <h3 className="font-semibold text-base mb-3 text-gray-800">{country.name}</h3>
-                        {country.curriculums.map((curriculum) => (
-                          <div key={curriculum.name} className="mb-3 bg-gray-50 rounded p-2">
-                            <h4 className="font-medium text-sm mb-2 text-blue-700">{curriculum.name}</h4>
-                            <div className="mb-2">
-                              <p className="text-xs font-medium text-gray-600 mb-1">Subjects:</p>
-                              <ul className="flex flex-col space-y-1">
-                                {curriculum.subjects.slice(0, 3).map((subject) => (
-                                  <ListItem 
-                                    key={subject} 
-                                    href={`/subjects/${subject.toLowerCase().replace(/ /g, '-')}`} 
-                                    title={subject}
-                                    className="text-xs py-1"
-                                  />
-                                ))}
-                                {curriculum.subjects.length > 3 && (
-                                  <ListItem 
-                                    href={`/country/${country.name.toLowerCase()}/curriculum/${curriculum.name.toLowerCase()}`}
-                                    title={`+${curriculum.subjects.length - 3} more`}
-                                    className="text-xs py-1 text-blue-500"
-                                  />
-                                )}
-                              </ul>
-                            </div>
-                            <div>
-                              <p className="text-xs font-medium text-gray-600 mb-1">Grades:</p>
-                              <div className="flex flex-wrap gap-1">
-                                {curriculum.grades.map((grade) => (
-                                  <span 
-                                    key={grade} 
-                                    className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded"
-                                  >
-                                    {grade}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
+      <NavigationMenuList className="flex flex-wrap justify-center gap-2">
+        {allCountries.map((country) => (
+          <NavigationMenuItem key={country.name}>
+            <NavigationMenuTrigger className={`text-base font-semibold ${country.color} hover:${country.color.replace('text-', 'bg-').replace('-600', '-50')}`}>
+              {country.name}
+            </NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <div className="w-[800px] p-6 bg-white shadow-lg border">
+                <h2 className={`font-bold text-xl mb-4 ${country.color} border-b border-gray-200 pb-2`}>
+                  {country.name} - Curriculums & Subjects
+                </h2>
+                <div className="grid grid-cols-2 gap-6">
+                  {country.data.curriculums.map((curriculum: any) => (
+                    <div key={curriculum.name} className="bg-gray-50 rounded-lg p-4">
+                      <h3 className="font-semibold text-lg mb-3 text-blue-700 border-b border-blue-200 pb-2">
+                        {curriculum.name}
+                      </h3>
+                      <div className="mb-3">
+                        <p className="text-sm font-medium text-gray-600 mb-2">Subjects:</p>
+                        <ul className="grid grid-cols-1 gap-1">
+                          {curriculum.subjects.map((subject: string) => (
+                            <ListItem 
+                              key={subject} 
+                              href={`/subjects/${subject.toLowerCase().replace(/ /g, '-')}`} 
+                              title={subject}
+                              className="text-sm py-1 hover:bg-blue-50"
+                            />
+                          ))}
+                        </ul>
                       </div>
-                    ))}
-                  </div>
-                ))}
+                      <div>
+                        <p className="text-sm font-medium text-gray-600 mb-2">Grades:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {curriculum.grades.map((grade: string) => (
+                            <span 
+                              key={grade} 
+                              className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded hover:bg-blue-200 cursor-pointer"
+                            >
+                              {grade}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        ))}
       </NavigationMenuList>
     </NavigationMenu>
   );
