@@ -307,8 +307,8 @@ export const ContinentCountriesMenu = () => {
                   >
                     <span className={continentInfo.hoverColor}>{continent}</span>
                   </NavigationMenuTrigger>
-                  <NavigationMenuContent className="!top-full !left-0 !mt-2">
-                    <div className="w-[1200px] p-0 bg-white shadow-2xl border rounded-lg overflow-visible relative z-[100]">
+                  <NavigationMenuContent className="!w-auto !min-w-[1200px]">
+                    <div className="w-[1200px] bg-white shadow-2xl border rounded-lg overflow-visible relative">
                       <div className="flex">
                         {/* Countries Column */}
                         <div className="w-56 bg-gray-50 border-r border-gray-200">
@@ -334,7 +334,7 @@ export const ContinentCountriesMenu = () => {
                                 </div>
                                 
                                 {/* Country Details - Shows on hover */}
-                                <div className="absolute left-full top-0 ml-1 w-[920px] bg-white border border-gray-200 rounded-lg shadow-xl opacity-0 invisible group-hover/country:opacity-100 group-hover/country:visible transition-all duration-300 z-[200]">
+                                <div className="absolute left-full top-0 ml-1 w-[920px] bg-white border border-gray-200 rounded-lg shadow-xl opacity-0 invisible group-hover/country:opacity-100 group-hover/country:visible transition-all duration-300 z-[300]">
                                   <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200">
                                     <h4 className="font-bold text-xl text-blue-700">{country.name}</h4>
                                     <p className="text-sm text-gray-600">Educational Curriculums & Programs</p>
