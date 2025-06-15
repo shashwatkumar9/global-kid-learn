@@ -10,7 +10,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 
-const allSubjects = [
+export const allSubjects = [
   { title: "Mathematics", href: "/subjects/mathematics", description: "From algebra to calculus, master all mathematical concepts.", category: "STEM" },
   { title: "Physics", href: "/subjects/physics", description: "Explore mechanics, thermodynamics, and quantum physics.", category: "STEM" },
   { title: "Chemistry", href: "/subjects/chemistry", description: "Learn organic, inorganic, and physical chemistry.", category: "STEM" },
@@ -28,7 +28,7 @@ const allSubjects = [
   { title: "Philosophy", href: "/subjects/philosophy", description: "Critical thinking and ethical reasoning.", category: "Humanities" },
 ];
 
-const allGrades = [
+export const allGrades = [
   { title: "Primary (K-5)", href: "/grades/k-5", description: "Foundation learning for young students.", category: "Elementary Education" },
   { title: "Elementary (1-5)", href: "/grades/1-5", description: "Core academic skills development.", category: "Elementary Education" },
   { title: "Middle School (6-8)", href: "/grades/6-8", description: "Building intermediate academic skills.", category: "Secondary Education" },

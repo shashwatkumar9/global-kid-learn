@@ -19,6 +19,10 @@ import SolvedExamples from "./pages/SolvedExamples";
 import ShortQuiz from "./pages/ShortQuiz";
 import Exam from "./pages/Exam";
 import NotFound from "./pages/NotFound";
+import SubjectPage from "./pages/SubjectPage";
+import GradePage from "./pages/GradePage";
+import CountryPage from "./pages/CountryPage";
+import CurriculumPage from "./pages/CurriculumPage";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +47,10 @@ const App = () => (
               <Route path="/solved-examples" element={<SolvedExamples />} />
               <Route path="/short-quiz" element={<ShortQuiz />} />
               <Route path="/exam" element={<Exam />} />
+              <Route path="/subjects/:subjectName" element={<SubjectPage />} />
+              <Route path="/grades/:gradeName" element={<GradePage />} />
+              <Route path="/countries/:countryName" element={<CountryPage />} />
+              <Route path="/curriculums/:curriculumName" element={<CurriculumPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
