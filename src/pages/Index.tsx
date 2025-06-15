@@ -7,6 +7,10 @@ import { HeroSection } from "@/components/home/HeroSection";
 import { ContentCategories } from "@/components/home/ContentCategories";
 import { UserTypeSelection } from "@/components/home/UserTypeSelection";
 import { FeaturesSection } from "@/components/home/FeaturesSection";
+import { FeaturedSubjects } from "@/components/home/FeaturedSubjects";
+import { FeaturedCurriculums } from "@/components/home/FeaturedCurriculums";
+import { StatsSection } from "@/components/home/StatsSection";
+import { TestimonialsSection } from "@/components/home/TestimonialsSection";
 import { Footer } from "@/components/home/Footer";
 
 const Index = () => {
@@ -56,6 +60,11 @@ const Index = () => {
         {!user && <UserTypeSelection />}
         <FeaturesSection />
       </main>
+
+      <FeaturedSubjects />
+      <FeaturedCurriculums />
+      <StatsSection />
+      <TestimonialsSection />
 
       <Footer />
     </div>
