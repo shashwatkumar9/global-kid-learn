@@ -9,7 +9,157 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      parent_student_relationships: {
+        Row: {
+          created_at: string | null
+          id: string
+          parent_id: string | null
+          relationship_type: string | null
+          student_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          parent_id?: string | null
+          relationship_type?: string | null
+          student_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          parent_id?: string | null
+          relationship_type?: string | null
+          student_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "parent_student_relationships_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "parent_student_relationships_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          country: string
+          created_at: string | null
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string | null
+          username: string
+        }
+        Insert: {
+          country: string
+          created_at?: string | null
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at?: string | null
+          username: string
+        }
+        Update: {
+          country?: string
+          created_at?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string | null
+          username?: string
+        }
+        Relationships: []
+      }
+      student_progress: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          progress_type: string
+          score: number | null
+          student_id: string | null
+          subject: string
+          topic: string
+          total_questions: number | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          progress_type: string
+          score?: number | null
+          student_id?: string | null
+          subject: string
+          topic: string
+          total_questions?: number | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          progress_type?: string
+          score?: number | null
+          student_id?: string | null
+          subject?: string
+          topic?: string
+          total_questions?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_progress_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      students: {
+        Row: {
+          created_at: string | null
+          grade: Database["public"]["Enums"]["grade_level"]
+          id: string
+          school_name: string | null
+          subjects: string[] | null
+        }
+        Insert: {
+          created_at?: string | null
+          grade: Database["public"]["Enums"]["grade_level"]
+          id: string
+          school_name?: string | null
+          subjects?: string[] | null
+        }
+        Update: {
+          created_at?: string | null
+          grade?: Database["public"]["Enums"]["grade_level"]
+          id?: string
+          school_name?: string | null
+          subjects?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "students_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +168,21 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      grade_level:
+        | "K"
+        | "1"
+        | "2"
+        | "3"
+        | "4"
+        | "5"
+        | "6"
+        | "7"
+        | "8"
+        | "9"
+        | "10"
+        | "11"
+        | "12"
+      user_role: "parent" | "student" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +297,23 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      grade_level: [
+        "K",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+      ],
+      user_role: ["parent", "student", "admin"],
+    },
   },
 } as const

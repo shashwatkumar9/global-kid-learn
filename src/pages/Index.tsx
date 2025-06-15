@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 import { 
   BookOpen, 
   Users, 
@@ -18,7 +20,50 @@ import {
 
 const Index = () => {
   const [selectedCountry, setSelectedCountry] = useState("UK");
-  const [userType, setUserType] = useState("");
+  const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    checkUser();
+  }, []);
+
+  const checkUser = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      setUser(user);
+      
+      // Get user profile to determine role
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+      
+      setProfile(profileData);
+    }
+  };
+
+  const handleUserLogin = () => {
+    if (user && profile) {
+      // Redirect based on user role
+      if (profile.role === "student") {
+        navigate("/student-dashboard");
+      } else if (profile.role === "parent") {
+        navigate("/parent-dashboard");
+      } else {
+        navigate("/");
+      }
+    } else {
+      navigate("/auth");
+    }
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    setProfile(null);
+  };
 
   const countries = [
     "UK", "Ireland", "USA", "India", "South Africa", "Germany", 
@@ -93,14 +138,31 @@ const Index = () => {
             </div>
 
             <div className="flex items-center space-x-4">
-              <Button variant="outline" size="sm" onClick={() => setUserType("parent")}>
-                <User className="w-4 h-4 mr-2" />
-                Parent Login
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => setUserType("child")}>
-                <Users className="w-4 h-4 mr-2" />
-                Student Login
-              </Button>
+              {user && profile ? (
+                <div className="flex items-center space-x-4">
+                  <span className="text-sm text-gray-600">
+                    Welcome, {profile.first_name}!
+                  </span>
+                  <Button variant="outline" size="sm" onClick={handleUserLogin}>
+                    <User className="w-4 h-4 mr-2" />
+                    Go to Dashboard
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={handleLogout}>
+                    Logout
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <Button variant="outline" size="sm" onClick={handleUserLogin}>
+                    <User className="w-4 h-4 mr-2" />
+                    Parent Login
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={handleUserLogin}>
+                    <Users className="w-4 h-4 mr-2" />
+                    Student Login
+                  </Button>
+                </>
+              )}
               <Menu className="h-6 w-6 md:hidden text-gray-700" />
             </div>
           </div>
@@ -163,7 +225,7 @@ const Index = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-lg px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all">
+            <Button size="lg" className="text-lg px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all" onClick={handleUserLogin}>
               Start Learning Now
             </Button>
             <Button variant="outline" size="lg" className="text-lg px-8 py-4 border-2 hover:bg-blue-50 transform hover:scale-105 transition-all">
@@ -315,7 +377,7 @@ const Index = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-lg px-8 py-4 bg-white text-blue-600 hover:bg-gray-100 transform hover:scale-105 transition-all">
+            <Button size="lg" className="text-lg px-8 py-4 bg-white text-blue-600 hover:bg-gray-100 transform hover:scale-105 transition-all" onClick={handleUserLogin}>
               <Calendar className="w-5 h-5 mr-2" />
               Start Free Trial
             </Button>
