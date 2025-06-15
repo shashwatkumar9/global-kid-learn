@@ -52,7 +52,17 @@ const SubjectGradeCurriculumQuizPage = () => {
         .eq('question_type', 'quiz')
         .order('created_at', { ascending: true });
 
-      setQuestions(data || []);
+      // Transform the data to match our Question interface
+      const transformedQuestions: Question[] = (data || []).map(question => ({
+        id: question.id,
+        question_text: question.question_text,
+        options: Array.isArray(question.options) ? question.options : [],
+        correct_answer: question.correct_answer,
+        explanation: question.explanation || '',
+        is_premium: question.is_premium || false,
+      }));
+
+      setQuestions(transformedQuestions);
     } catch (error) {
       console.error('Error loading questions:', error);
     } finally {
