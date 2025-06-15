@@ -41,6 +41,7 @@ export const Header = ({ user, profile, onDashboardNavigation }: HeaderProps) =>
                 <CreditCard className="w-4 h-4" />
                 <span>Pricing</span>
               </a>
+              <SubjectsGradesMenu />
             </div>
             <div className="flex items-center space-x-6">
               <a href="/terms" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
@@ -102,15 +103,6 @@ export const Header = ({ user, profile, onDashboardNavigation }: HeaderProps) =>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-center items-center h-12">
             <ContinentCountriesMenu />
-          </div>
-        </div>
-      </div>
-
-      {/* Subjects & Grades Menu Bar */}
-      <div className="bg-gray-50 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center items-center h-12">
-            <SubjectsGradesMenu />
           </div>
         </div>
       </div>

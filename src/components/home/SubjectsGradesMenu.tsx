@@ -76,11 +76,11 @@ ListItem.displayName = "ListItem";
 
 export const SubjectsGradesMenu = () => {
   return (
-    <div className="flex space-x-8">
+    <div className="flex space-x-4">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="text-base font-semibold">Subjects</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="text-sm text-gray-600 hover:text-blue-600 font-medium">Subjects</NavigationMenuTrigger>
             <NavigationMenuContent>
               <div className="w-[800px] p-6">
                 <div className="grid grid-cols-3 gap-6">
@@ -113,7 +113,7 @@ export const SubjectsGradesMenu = () => {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="text-base font-semibold">Grades & Levels</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="text-sm text-gray-600 hover:text-blue-600 font-medium">Grades & Levels</NavigationMenuTrigger>
             <NavigationMenuContent>
               <div className="w-[600px] p-6">
                 <div className="grid grid-cols-2 gap-4">
