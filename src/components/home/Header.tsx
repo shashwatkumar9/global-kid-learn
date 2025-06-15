@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +11,8 @@ import {
   Phone,
   FileText,
   CreditCard,
-  Users
+  Users,
+  LogIn
 } from "lucide-react";
 import { ContinentCountriesMenu } from "./ContinentCountriesMenu";
 import { SubjectsGradesMenu } from "./SubjectsGradesMenu";
@@ -74,7 +76,7 @@ export const Header = ({ user, profile, onDashboardNavigation }: HeaderProps) =>
             </div>
             
             <div className="flex items-center space-x-4">
-              {user && (
+              {user ? (
                 <div className="flex items-center space-x-4">
                   {subscribed && (
                     <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center space-x-1">
@@ -95,6 +97,26 @@ export const Header = ({ user, profile, onDashboardNavigation }: HeaderProps) =>
                     onClick={() => navigate("/subscription")}
                   >
                     {subscribed ? "Manage" : "Upgrade"}
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => navigate("/auth?type=student")}
+                    className="text-blue-600 border-blue-600 hover:bg-blue-50"
+                  >
+                    <LogIn className="w-4 h-4 mr-2" />
+                    Student Login
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    onClick={() => navigate("/auth?type=parent")}
+                    className="bg-gradient-to-r from-blue-600 to-purple-600"
+                  >
+                    <Users className="w-4 h-4 mr-2" />
+                    Parent Login
                   </Button>
                 </div>
               )}
