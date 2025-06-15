@@ -14,6 +14,7 @@ const continentData = {
   "North America": {
     color: "text-blue-600",
     bgColor: "hover:bg-blue-50",
+    hoverColor: "group-hover:text-blue-700",
     countries: [
       {
         name: "USA",
@@ -43,6 +44,7 @@ const continentData = {
   "Europe": {
     color: "text-green-600",
     bgColor: "hover:bg-green-50",
+    hoverColor: "group-hover:text-green-700",
     countries: [
       {
         name: "UK",
@@ -106,6 +108,7 @@ const continentData = {
   "Asia & Middle East": {
     color: "text-purple-600",
     bgColor: "hover:bg-purple-50",
+    hoverColor: "group-hover:text-purple-700",
     countries: [
       {
         name: "India",
@@ -171,6 +174,7 @@ const continentData = {
   "Oceania": {
     color: "text-orange-600",
     bgColor: "hover:bg-orange-50",
+    hoverColor: "group-hover:text-orange-700",
     countries: [
       {
         name: "Australia",
@@ -199,6 +203,7 @@ const continentData = {
   "Africa": {
     color: "text-red-600",
     bgColor: "hover:bg-red-50",
+    hoverColor: "group-hover:text-red-700",
     countries: [
       {
         name: "South Africa",
@@ -254,6 +259,7 @@ const continentData = {
   "South America": {
     color: "text-teal-600",
     bgColor: "hover:bg-teal-50",
+    hoverColor: "group-hover:text-teal-700",
     countries: [
       {
         name: "Brazil",
@@ -287,103 +293,121 @@ const continentData = {
   },
 };
 
-const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            "block select-none space-y-1 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-          {...props}
-        >
-          <div className="text-xs font-medium leading-none">{title}</div>
-          {children && <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
-            {children}
-          </p>}
-        </a>
-      </NavigationMenuLink>
-    </li>
-  );
-});
-ListItem.displayName = "ListItem";
-
-// Get all countries with their continent colors
-const getAllCountriesWithColors = () => {
-  const countries: Array<{ name: string; color: string; bgColor: string; data: any }> = [];
-  Object.entries(continentData).forEach(([continent, continentInfo]) => {
-    continentInfo.countries.forEach(country => {
-      countries.push({
-        name: country.name,
-        color: continentInfo.color,
-        bgColor: continentInfo.bgColor,
-        data: country
-      });
-    });
-  });
-  return countries;
-};
-
 export const ContinentCountriesMenu = () => {
-  const allCountries = getAllCountriesWithColors();
-
   return (
-    <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-teal-50 border-b border-gray-200 shadow-sm">
+    <div className="bg-gradient-to-r from-slate-50 via-blue-50 to-purple-50 border-b border-gray-200 shadow-sm relative z-30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-center items-center py-3">
+        <div className="flex justify-center items-center py-4">
           <NavigationMenu>
-            <NavigationMenuList className="flex flex-wrap justify-center gap-3">
-              {allCountries.map((country) => (
-                <NavigationMenuItem key={country.name}>
+            <NavigationMenuList className="flex space-x-1">
+              {Object.entries(continentData).map(([continent, continentInfo]) => (
+                <NavigationMenuItem key={continent}>
                   <NavigationMenuTrigger 
-                    className={`text-sm font-semibold ${country.color} ${country.bgColor} border border-gray-200 rounded-lg px-4 py-2 shadow-sm transition-all duration-200 hover:shadow-md hover:scale-105`}
+                    className={`text-sm font-semibold ${continentInfo.color} ${continentInfo.bgColor} border border-gray-200 rounded-lg px-4 py-2 shadow-sm transition-all duration-200 hover:shadow-md hover:scale-105 group`}
                   >
-                    {country.name}
+                    <span className={continentInfo.hoverColor}>{continent}</span>
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div className="w-[900px] p-6 bg-white shadow-xl border rounded-lg">
-                      <h2 className={`font-bold text-xl mb-4 ${country.color} border-b border-gray-200 pb-2`}>
-                        {country.name} - Curriculums & Subjects
-                      </h2>
-                      <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-                        {country.data.curriculums.map((curriculum: any) => (
-                          <div key={curriculum.name} className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-4 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                            <h3 className="font-semibold text-lg mb-3 text-blue-700 border-b border-blue-200 pb-2">
-                              {curriculum.name}
+                    <div className="w-[1200px] p-0 bg-white shadow-2xl border rounded-lg overflow-hidden">
+                      <div className="flex">
+                        {/* Countries Column */}
+                        <div className="w-56 bg-gray-50 border-r border-gray-200">
+                          <div className={`p-4 ${continentInfo.bgColor} border-b border-gray-200`}>
+                            <h3 className={`font-bold text-lg ${continentInfo.color}`}>
+                              {continent}
                             </h3>
-                            <div className="mb-3">
-                              <p className="text-sm font-medium text-gray-600 mb-2">Subjects:</p>
-                              <ul className="grid grid-cols-1 gap-1 max-h-32 overflow-y-auto">
-                                {curriculum.subjects.map((subject: string) => (
-                                  <ListItem 
-                                    key={subject} 
-                                    href={`/subjects/${subject.toLowerCase().replace(/ /g, '-')}`} 
-                                    title={subject}
-                                    className="text-xs py-1 hover:bg-blue-50 rounded transition-colors"
-                                  />
-                                ))}
-                              </ul>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-gray-600 mb-2">Grades:</p>
-                              <div className="flex flex-wrap gap-1">
-                                {curriculum.grades.map((grade: string) => (
-                                  <span 
-                                    key={grade} 
-                                    className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full hover:bg-blue-200 cursor-pointer transition-colors shadow-sm"
-                                  >
-                                    {grade}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
+                            <p className="text-xs text-gray-600">Select a country</p>
                           </div>
-                        ))}
+                          <div className="p-2">
+                            {continentInfo.countries.map((country) => (
+                              <div 
+                                key={country.name}
+                                className="group/country relative"
+                              >
+                                <div className="p-3 hover:bg-white hover:shadow-sm rounded-lg cursor-pointer transition-all duration-200 border border-transparent hover:border-gray-200 mb-1">
+                                  <div className="font-medium text-gray-800 group-hover/country:text-blue-600">
+                                    {country.name}
+                                  </div>
+                                  <div className="text-xs text-gray-500">
+                                    {country.curriculums.length} curriculum{country.curriculums.length > 1 ? 's' : ''}
+                                  </div>
+                                </div>
+                                
+                                {/* Country Details - Shows on hover */}
+                                <div className="absolute left-full top-0 ml-1 w-[920px] bg-white border border-gray-200 rounded-lg shadow-xl opacity-0 invisible group-hover/country:opacity-100 group-hover/country:visible transition-all duration-300 z-50">
+                                  <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200">
+                                    <h4 className="font-bold text-xl text-blue-700">{country.name}</h4>
+                                    <p className="text-sm text-gray-600">Educational Curriculums & Programs</p>
+                                  </div>
+                                  
+                                  <div className="p-4 grid grid-cols-3 gap-4 max-h-96 overflow-y-auto">
+                                    {country.curriculums.map((curriculum) => (
+                                      <div 
+                                        key={curriculum.name} 
+                                        className="bg-gradient-to-br from-white to-gray-50 rounded-lg p-4 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200"
+                                      >
+                                        <h5 className="font-semibold text-lg mb-3 text-blue-700 border-b border-blue-200 pb-2">
+                                          {curriculum.name}
+                                        </h5>
+                                        
+                                        <div className="mb-4">
+                                          <p className="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                            <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                            Subjects
+                                          </p>
+                                          <div className="space-y-1 max-h-24 overflow-y-auto">
+                                            {curriculum.subjects.map((subject) => (
+                                              <div 
+                                                key={subject}
+                                                className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded hover:bg-blue-100 cursor-pointer transition-colors border border-blue-200"
+                                              >
+                                                {subject}
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </div>
+                                        
+                                        <div>
+                                          <p className="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                            <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                                            Grades
+                                          </p>
+                                          <div className="flex flex-wrap gap-1">
+                                            {curriculum.grades.map((grade) => (
+                                              <span 
+                                                key={grade}
+                                                className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full hover:bg-orange-200 cursor-pointer transition-colors border border-orange-200"
+                                              >
+                                                {grade}
+                                              </span>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        {/* Default view when no country is hovered */}
+                        <div className="flex-1 p-8 flex items-center justify-center bg-gradient-to-br from-gray-50 to-white">
+                          <div className="text-center">
+                            <div className={`w-16 h-16 ${continentInfo.bgColor} rounded-full flex items-center justify-center mx-auto mb-4 border-2 ${continentInfo.color.replace('text-', 'border-')}`}>
+                              <span className={`text-2xl font-bold ${continentInfo.color}`}>
+                                {continent.charAt(0)}
+                              </span>
+                            </div>
+                            <h4 className={`text-xl font-semibold ${continentInfo.color} mb-2`}>
+                              Explore {continent}
+                            </h4>
+                            <p className="text-gray-600 text-sm">
+                              Hover over any country to see detailed curriculum information, subjects, and grade levels.
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </NavigationMenuContent>
