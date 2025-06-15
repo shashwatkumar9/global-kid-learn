@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -101,9 +100,6 @@ const Index = () => {
               <Button variant="outline" size="sm" onClick={() => setUserType("child")}>
                 <Users className="w-4 h-4 mr-2" />
                 Student Login
-              </Button>
-              <Button size="sm" onClick={() => setUserType("admin")}>
-                Admin Panel
               </Button>
               <Menu className="h-6 w-6 md:hidden text-gray-700" />
             </div>
