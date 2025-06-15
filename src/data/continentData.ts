@@ -1,4 +1,3 @@
-
 export const continentData = {
   "North America": {
     color: "text-blue-600",
@@ -8,9 +7,93 @@ export const continentData = {
       {
         name: "USA",
         curriculums: [
-          { name: "Common Core", subjects: ["Math", "English Language Arts", "Science", "Social Studies"], grades: ["K-5", "6-8", "9-12"] },
-          { name: "AP", subjects: ["AP Calculus", "AP Physics", "AP Chemistry", "AP Biology", "AP History"], grades: ["9-12"] },
-          { name: "SAT Prep", subjects: ["Math", "Reading", "Writing", "Essay"], grades: ["9-12"] },
+          { 
+            name: "Common Core", 
+            subjects: [
+              "Mathematics", 
+              "English Language Arts"
+            ], 
+            grades: [
+              "Grade K", 
+              "Grade 1", 
+              "Grade 2", 
+              "Grade 3", 
+              "Grade 4", 
+              "Grade 5", 
+              "Grade 6", 
+              "Grade 7", 
+              "Grade 8", 
+              "Grade 9", 
+              "Grade 10", 
+              "Grade 11", 
+              "Grade 12"
+            ] 
+          },
+          { 
+            name: "Next Generation Science Standards", 
+            subjects: [
+              "Science", 
+              "Physical Science", 
+              "Life Science", 
+              "Earth Science", 
+              "Engineering"
+            ], 
+            grades: [
+              "Grade K", 
+              "Grade 1", 
+              "Grade 2", 
+              "Grade 3", 
+              "Grade 4", 
+              "Grade 5", 
+              "Grade 6", 
+              "Grade 7", 
+              "Grade 8", 
+              "Grade 9", 
+              "Grade 10", 
+              "Grade 11", 
+              "Grade 12"
+            ] 
+          },
+          { 
+            name: "AP", 
+            subjects: [
+              "AP Calculus AB", 
+              "AP Calculus BC", 
+              "AP Statistics", 
+              "AP Physics 1", 
+              "AP Physics 2", 
+              "AP Physics C", 
+              "AP Chemistry", 
+              "AP Biology", 
+              "AP Environmental Science", 
+              "AP History", 
+              "AP English Language", 
+              "AP English Literature", 
+              "AP Psychology", 
+              "AP Economics"
+            ], 
+            grades: [
+              "Grade 9", 
+              "Grade 10", 
+              "Grade 11", 
+              "Grade 12"
+            ] 
+          },
+          { 
+            name: "SAT Prep", 
+            subjects: [
+              "SAT Math", 
+              "SAT Reading", 
+              "SAT Writing", 
+              "SAT Essay"
+            ], 
+            grades: [
+              "Grade 9", 
+              "Grade 10", 
+              "Grade 11", 
+              "Grade 12"
+            ] 
+          },
         ],
       },
       {
