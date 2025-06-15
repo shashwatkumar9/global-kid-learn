@@ -30,6 +30,51 @@ export type Database = {
         }
         Relationships: []
       }
+      educational_content: {
+        Row: {
+          content: string
+          content_type: string
+          country: string
+          created_at: string
+          curriculum: string
+          difficulty_level: string | null
+          grade: string
+          id: string
+          is_premium: boolean | null
+          subject: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          content_type: string
+          country: string
+          created_at?: string
+          curriculum: string
+          difficulty_level?: string | null
+          grade: string
+          id?: string
+          is_premium?: boolean | null
+          subject: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          content_type?: string
+          country?: string
+          created_at?: string
+          curriculum?: string
+          difficulty_level?: string | null
+          grade?: string
+          id?: string
+          is_premium?: boolean | null
+          subject?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       parent_student_relationships: {
         Row: {
           created_at: string | null
@@ -108,6 +153,57 @@ export type Database = {
           subscription_status?: string | null
           updated_at?: string | null
           username?: string
+        }
+        Relationships: []
+      }
+      questions: {
+        Row: {
+          correct_answer: string
+          country: string
+          created_at: string
+          curriculum: string
+          difficulty_level: string | null
+          explanation: string | null
+          grade: string
+          id: string
+          is_premium: boolean | null
+          options: Json
+          question_text: string
+          question_type: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          correct_answer: string
+          country: string
+          created_at?: string
+          curriculum: string
+          difficulty_level?: string | null
+          explanation?: string | null
+          grade: string
+          id?: string
+          is_premium?: boolean | null
+          options: Json
+          question_text: string
+          question_type: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          correct_answer?: string
+          country?: string
+          created_at?: string
+          curriculum?: string
+          difficulty_level?: string | null
+          explanation?: string | null
+          grade?: string
+          id?: string
+          is_premium?: boolean | null
+          options?: Json
+          question_text?: string
+          question_type?: string
+          subject?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -220,6 +316,48 @@ export type Database = {
           subscription_tier?: string | null
           updated_at?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      test_results: {
+        Row: {
+          answers: Json
+          completed_at: string
+          curriculum: string
+          grade: string
+          id: string
+          score: number
+          subject: string
+          test_type: string
+          time_taken: number | null
+          total_questions: number
+          user_id: string
+        }
+        Insert: {
+          answers: Json
+          completed_at?: string
+          curriculum: string
+          grade: string
+          id?: string
+          score: number
+          subject: string
+          test_type: string
+          time_taken?: number | null
+          total_questions: number
+          user_id: string
+        }
+        Update: {
+          answers?: Json
+          completed_at?: string
+          curriculum?: string
+          grade?: string
+          id?: string
+          score?: number
+          subject?: string
+          test_type?: string
+          time_taken?: number | null
+          total_questions?: number
+          user_id?: string
         }
         Relationships: []
       }

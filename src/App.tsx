@@ -23,6 +23,9 @@ import SubjectPage from "./pages/SubjectPage";
 import GradePage from "./pages/GradePage";
 import CountryPage from "./pages/CountryPage";
 import CurriculumPage from "./pages/CurriculumPage";
+import SubjectGradeCurriculumPage from "./pages/SubjectGradeCurriculumPage";
+import SubjectGradeCurriculumTheoryPage from "./pages/SubjectGradeCurriculumTheoryPage";
+import SubjectGradeCurriculumQuizPage from "./pages/SubjectGradeCurriculumQuizPage";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +54,13 @@ const App = () => (
               <Route path="/grades/:gradeName" element={<GradePage />} />
               <Route path="/countries/:countryName" element={<CountryPage />} />
               <Route path="/curriculums/:curriculumName" element={<CurriculumPage />} />
+              {/* Comprehensive subject-grade-curriculum routes */}
+              <Route path="/subjects/:subjectName/grades/:gradeName/curriculums/:curriculumName" element={<SubjectGradeCurriculumPage />} />
+              <Route path="/subjects/:subjectName/grades/:gradeName/curriculums/:curriculumName/theory" element={<SubjectGradeCurriculumTheoryPage />} />
+              <Route path="/subjects/:subjectName/grades/:gradeName/curriculums/:curriculumName/quiz" element={<SubjectGradeCurriculumQuizPage />} />
+              <Route path="/subjects/:subjectName/grades/:gradeName/curriculums/:curriculumName/solved-examples" element={<SubjectGradeCurriculumTheoryPage />} />
+              <Route path="/subjects/:subjectName/grades/:gradeName/curriculums/:curriculumName/short-quiz" element={<SubjectGradeCurriculumQuizPage />} />
+              <Route path="/subjects/:subjectName/grades/:gradeName/curriculums/:curriculumName/exam" element={<SubjectGradeCurriculumQuizPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
