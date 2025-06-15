@@ -13,6 +13,7 @@ import {
 const continentData = {
   "North America": {
     color: "text-blue-600",
+    bgColor: "hover:bg-blue-50",
     countries: [
       {
         name: "USA",
@@ -30,10 +31,18 @@ const continentData = {
           { name: "Alberta", subjects: ["Mathematics", "Science", "Social Studies", "English"], grades: ["K-12"] },
         ],
       },
+      {
+        name: "Mexico",
+        curriculums: [
+          { name: "SEP", subjects: ["Matemáticas", "Ciencias", "Español", "Historia", "Geografía"], grades: ["1-12"] },
+          { name: "Bachillerato", subjects: ["Mathematics", "Physics", "Chemistry", "Biology"], grades: ["10-12"] },
+        ],
+      },
     ],
   },
   "Europe": {
     color: "text-green-600",
+    bgColor: "hover:bg-green-50",
     countries: [
       {
         name: "UK",
@@ -78,10 +87,25 @@ const continentData = {
           { name: "Esame di Stato", subjects: ["Mathematics", "Sciences", "Languages", "Humanities"], grades: ["13"] },
         ],
       },
+      {
+        name: "Spain",
+        curriculums: [
+          { name: "ESO", subjects: ["Matemáticas", "Física y Química", "Biología", "Lengua", "Historia"], grades: ["7-10"] },
+          { name: "Bachillerato", subjects: ["Mathematics", "Physics", "Chemistry", "Biology"], grades: ["11-12"] },
+        ],
+      },
+      {
+        name: "Switzerland",
+        curriculums: [
+          { name: "Maturité", subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Languages"], grades: ["9-12"] },
+          { name: "Federal VET", subjects: ["Applied Mathematics", "Sciences", "Technology"], grades: ["9-12"] },
+        ],
+      },
     ],
   },
   "Asia & Middle East": {
     color: "text-purple-600",
+    bgColor: "hover:bg-purple-50",
     countries: [
       {
         name: "India",
@@ -114,10 +138,39 @@ const continentData = {
           { name: "IB", subjects: ["Mathematics HL", "Sciences", "Languages"], grades: ["11-12"] },
         ],
       },
+      {
+        name: "Japan",
+        curriculums: [
+          { name: "High School", subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Japanese"], grades: ["10-12"] },
+          { name: "International Baccalaureate", subjects: ["Mathematics", "Sciences", "Languages"], grades: ["11-12"] },
+        ],
+      },
+      {
+        name: "South Korea",
+        curriculums: [
+          { name: "CSAT", subjects: ["Mathematics", "Science", "Korean", "English", "Social Studies"], grades: ["10-12"] },
+          { name: "High School", subjects: ["Advanced Mathematics", "Physics", "Chemistry", "Biology"], grades: ["10-12"] },
+        ],
+      },
+      {
+        name: "China",
+        curriculums: [
+          { name: "Gaokao", subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Chinese"], grades: ["10-12"] },
+          { name: "International Schools", subjects: ["Mathematics", "Sciences", "English", "Chinese"], grades: ["K-12"] },
+        ],
+      },
+      {
+        name: "Qatar",
+        curriculums: [
+          { name: "Qatar National", subjects: ["Mathematics", "Science", "Arabic", "English", "Islamic Studies"], grades: ["K-12"] },
+          { name: "International Schools", subjects: ["Mathematics", "Physics", "Chemistry", "Biology"], grades: ["K-12"] },
+        ],
+      },
     ],
   },
   "Oceania": {
     color: "text-orange-600",
+    bgColor: "hover:bg-orange-50",
     countries: [
       {
         name: "Australia",
@@ -134,10 +187,18 @@ const continentData = {
           { name: "Cambridge International", subjects: ["Mathematics", "Sciences", "Languages"], grades: ["9-13"] },
         ],
       },
+      {
+        name: "Fiji",
+        curriculums: [
+          { name: "Form 7", subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "English"], grades: ["11-13"] },
+          { name: "SPFSC", subjects: ["Mathematics", "Sciences", "Languages"], grades: ["12-13"] },
+        ],
+      },
     ],
   },
   "Africa": {
     color: "text-red-600",
+    bgColor: "hover:bg-red-50",
     countries: [
       {
         name: "South Africa",
@@ -161,6 +222,13 @@ const continentData = {
         ],
       },
       {
+        name: "Kenya",
+        curriculums: [
+          { name: "KCSE", subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "English"], grades: ["9-12"] },
+          { name: "8-4-4 System", subjects: ["Mathematics", "Sciences", "Languages", "Humanities"], grades: ["1-12"] },
+        ],
+      },
+      {
         name: "Tanzania",
         curriculums: [
           { name: "NECTA", subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "English"], grades: ["1-12"] },
@@ -174,16 +242,45 @@ const continentData = {
           { name: "International Schools", subjects: ["Mathematics", "Sciences", "English", "Arabic"], grades: ["K-12"] },
         ],
       },
+      {
+        name: "Morocco",
+        curriculums: [
+          { name: "Baccalauréat", subjects: ["Mathématiques", "Physique", "Chimie", "Biologie", "Arabe"], grades: ["10-12"] },
+          { name: "International Schools", subjects: ["Mathematics", "Sciences", "French", "Arabic"], grades: ["K-12"] },
+        ],
+      },
     ],
   },
   "South America": {
     color: "text-teal-600",
+    bgColor: "hover:bg-teal-50",
     countries: [
       {
         name: "Brazil",
         curriculums: [
           { name: "ENEM", subjects: ["Matemática", "Ciências da Natureza", "Português", "História", "Geografia"], grades: ["10-12"] },
           { name: "Ensino Médio", subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Portuguese"], grades: ["10-12"] },
+        ],
+      },
+      {
+        name: "Argentina",
+        curriculums: [
+          { name: "Bachillerato", subjects: ["Matemática", "Física", "Química", "Biología", "Español"], grades: ["10-12"] },
+          { name: "International Schools", subjects: ["Mathematics", "Sciences", "Spanish", "English"], grades: ["K-12"] },
+        ],
+      },
+      {
+        name: "Chile",
+        curriculums: [
+          { name: "PSU", subjects: ["Matemática", "Ciencias", "Lenguaje", "Historia"], grades: ["9-12"] },
+          { name: "International Baccalaureate", subjects: ["Mathematics", "Sciences", "Languages"], grades: ["11-12"] },
+        ],
+      },
+      {
+        name: "Colombia",
+        curriculums: [
+          { name: "ICFES", subjects: ["Matemáticas", "Ciencias", "Español", "Inglés", "Sociales"], grades: ["9-11"] },
+          { name: "International Schools", subjects: ["Mathematics", "Sciences", "Spanish", "English"], grades: ["K-11"] },
         ],
       },
     ],
@@ -218,12 +315,13 @@ ListItem.displayName = "ListItem";
 
 // Get all countries with their continent colors
 const getAllCountriesWithColors = () => {
-  const countries: Array<{ name: string; color: string; data: any }> = [];
+  const countries: Array<{ name: string; color: string; bgColor: string; data: any }> = [];
   Object.entries(continentData).forEach(([continent, continentInfo]) => {
     continentInfo.countries.forEach(country => {
       countries.push({
         name: country.name,
         color: continentInfo.color,
+        bgColor: continentInfo.bgColor,
         data: country
       });
     });
@@ -235,58 +333,66 @@ export const ContinentCountriesMenu = () => {
   const allCountries = getAllCountriesWithColors();
 
   return (
-    <NavigationMenu>
-      <NavigationMenuList className="flex flex-wrap justify-center gap-2">
-        {allCountries.map((country) => (
-          <NavigationMenuItem key={country.name}>
-            <NavigationMenuTrigger className={`text-base font-semibold ${country.color} hover:${country.color.replace('text-', 'bg-').replace('-600', '-50')}`}>
-              {country.name}
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <div className="w-[800px] p-6 bg-white shadow-lg border">
-                <h2 className={`font-bold text-xl mb-4 ${country.color} border-b border-gray-200 pb-2`}>
-                  {country.name} - Curriculums & Subjects
-                </h2>
-                <div className="grid grid-cols-2 gap-6">
-                  {country.data.curriculums.map((curriculum: any) => (
-                    <div key={curriculum.name} className="bg-gray-50 rounded-lg p-4">
-                      <h3 className="font-semibold text-lg mb-3 text-blue-700 border-b border-blue-200 pb-2">
-                        {curriculum.name}
-                      </h3>
-                      <div className="mb-3">
-                        <p className="text-sm font-medium text-gray-600 mb-2">Subjects:</p>
-                        <ul className="grid grid-cols-1 gap-1">
-                          {curriculum.subjects.map((subject: string) => (
-                            <ListItem 
-                              key={subject} 
-                              href={`/subjects/${subject.toLowerCase().replace(/ /g, '-')}`} 
-                              title={subject}
-                              className="text-sm py-1 hover:bg-blue-50"
-                            />
-                          ))}
-                        </ul>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-gray-600 mb-2">Grades:</p>
-                        <div className="flex flex-wrap gap-1">
-                          {curriculum.grades.map((grade: string) => (
-                            <span 
-                              key={grade} 
-                              className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded hover:bg-blue-200 cursor-pointer"
-                            >
-                              {grade}
-                            </span>
-                          ))}
-                        </div>
+    <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-teal-50 border-b border-gray-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-center items-center py-3">
+          <NavigationMenu>
+            <NavigationMenuList className="flex flex-wrap justify-center gap-3">
+              {allCountries.map((country) => (
+                <NavigationMenuItem key={country.name}>
+                  <NavigationMenuTrigger 
+                    className={`text-sm font-semibold ${country.color} ${country.bgColor} border border-gray-200 rounded-lg px-4 py-2 shadow-sm transition-all duration-200 hover:shadow-md hover:scale-105`}
+                  >
+                    {country.name}
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <div className="w-[900px] p-6 bg-white shadow-xl border rounded-lg">
+                      <h2 className={`font-bold text-xl mb-4 ${country.color} border-b border-gray-200 pb-2`}>
+                        {country.name} - Curriculums & Subjects
+                      </h2>
+                      <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+                        {country.data.curriculums.map((curriculum: any) => (
+                          <div key={curriculum.name} className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-4 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                            <h3 className="font-semibold text-lg mb-3 text-blue-700 border-b border-blue-200 pb-2">
+                              {curriculum.name}
+                            </h3>
+                            <div className="mb-3">
+                              <p className="text-sm font-medium text-gray-600 mb-2">Subjects:</p>
+                              <ul className="grid grid-cols-1 gap-1 max-h-32 overflow-y-auto">
+                                {curriculum.subjects.map((subject: string) => (
+                                  <ListItem 
+                                    key={subject} 
+                                    href={`/subjects/${subject.toLowerCase().replace(/ /g, '-')}`} 
+                                    title={subject}
+                                    className="text-xs py-1 hover:bg-blue-50 rounded transition-colors"
+                                  />
+                                ))}
+                              </ul>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-gray-600 mb-2">Grades:</p>
+                              <div className="flex flex-wrap gap-1">
+                                {curriculum.grades.map((grade: string) => (
+                                  <span 
+                                    key={grade} 
+                                    className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full hover:bg-blue-200 cursor-pointer transition-colors shadow-sm"
+                                  >
+                                    {grade}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-        ))}
-      </NavigationMenuList>
-    </NavigationMenu>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+      </div>
+    </div>
   );
 };
