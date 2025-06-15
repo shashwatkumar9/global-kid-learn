@@ -18,26 +18,27 @@ import { useNavigate } from "react-router-dom";
 const subjects = allSubjects.map(item => ({ ...item, type: 'Subject' as const, icon: Book }));
 const grades = allGrades.map(item => ({ ...item, type: 'Grade' as const, icon: GraduationCap }));
 
-const countries = continentData.flatMap(continent => 
+const countries = Object.values(continentData).flatMap(continent => 
   continent.countries.map(country => ({
     title: country.name,
     href: `/countries/${country.name.toLowerCase().replace(/ /g, '-')}`,
-    description: `Curriculum: ${country.curriculum}`,
+    description: `Curriculum: ${country.curriculums[0]?.name || 'Various'}`,
     type: 'Country' as const,
     icon: Globe,
   }))
 );
 
-const curriculums = continentData.flatMap(continent => 
-  continent.countries.map(country => ({
-    title: country.curriculum,
-    href: `/curriculums/${country.curriculum.toLowerCase().replace(/ /g, '-').replace(/\(|\)/g, '')}`,
-    description: `Used in ${country.name}`,
-    type: 'Curriculum' as const,
-    icon: Library,
-  }))
+const curriculums = Object.values(continentData).flatMap(continent => 
+  continent.countries.flatMap(country => 
+    country.curriculums.map(curriculum => ({
+      title: curriculum.name,
+      href: `/curriculums/${curriculum.name.toLowerCase().replace(/ /g, '-').replace(/\(|\)/g, '')}`,
+      description: `Used in ${country.name}`,
+      type: 'Curriculum' as const,
+      icon: Library,
+    }))
+  )
 ).filter((v,i,a)=>a.findIndex(t=>(t.title === v.title))===i);
-
 
 export const GlobalSearch = () => {
   const [open, setOpen] = React.useState(false);
