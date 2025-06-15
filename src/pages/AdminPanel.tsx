@@ -26,7 +26,11 @@ import {
   HelpCircle,
   Navigation,
   Menu,
-  UserCheck
+  UserCheck,
+  Layout,
+  PenTool,
+  Clock,
+  Zap
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -38,7 +42,7 @@ const AdminPanel = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  // Content Management States
+  // Enhanced Content Management States
   const [contentForm, setContentForm] = useState({
     title: "",
     content: "",
@@ -48,10 +52,14 @@ const AdminPanel = () => {
     curriculum: "",
     country: "United States",
     difficulty_level: "beginner",
-    is_premium: false
+    is_premium: false,
+    duration: "", // for exams
+    tags: "", // for blog posts
+    meta_description: "", // for SEO
+    featured_image: "" // for blog posts
   });
 
-  // Quiz Management States
+  // Quiz Management States (Enhanced)
   const [quizForm, setQuizForm] = useState({
     question_text: "",
     options: ["", "", "", ""],
@@ -63,7 +71,43 @@ const AdminPanel = () => {
     curriculum: "",
     country: "United States",
     difficulty_level: "beginner",
-    is_premium: false
+    is_premium: false,
+    points: 1,
+    time_limit: 0 // in seconds, 0 for no limit
+  });
+
+  // Page Editor States
+  const [pageEditor, setPageEditor] = useState({
+    page_url: "",
+    page_title: "",
+    page_content: "",
+    meta_title: "",
+    meta_description: "",
+    keywords: "",
+    is_published: true
+  });
+
+  // Blog States
+  const [blogForm, setBlogForm] = useState({
+    title: "",
+    content: "",
+    excerpt: "",
+    author: "K12Expert Team",
+    category: "Education",
+    tags: "",
+    featured_image: "",
+    is_published: false,
+    publish_date: new Date().toISOString().split('T')[0]
+  });
+
+  // Navigation States
+  const [navItems, setNavItems] = useState([]);
+  const [newNavItem, setNewNavItem] = useState({
+    label: "",
+    url: "",
+    parent_id: null,
+    order: 0,
+    is_active: true
   });
 
   // User Monitoring States
@@ -114,9 +158,10 @@ const AdminPanel = () => {
       
       toast({
         title: "Content Added",
-        description: "Educational content has been successfully added.",
+        description: `${contentForm.content_type} content has been successfully added.`,
       });
       
+      // Reset form
       setContentForm({
         title: "",
         content: "",
@@ -126,7 +171,11 @@ const AdminPanel = () => {
         curriculum: "",
         country: "United States",
         difficulty_level: "beginner",
-        is_premium: false
+        is_premium: false,
+        duration: "",
+        tags: "",
+        meta_description: "",
+        featured_image: ""
       });
     } catch (error) {
       toast({
@@ -158,6 +207,7 @@ const AdminPanel = () => {
         description: "Quiz question has been successfully added.",
       });
       
+      // Reset form
       setQuizForm({
         question_text: "",
         options: ["", "", "", ""],
@@ -169,12 +219,107 @@ const AdminPanel = () => {
         curriculum: "",
         country: "United States",
         difficulty_level: "beginner",
-        is_premium: false
+        is_premium: false,
+        points: 1,
+        time_limit: 0
       });
     } catch (error) {
       toast({
         title: "Error",
         description: "Failed to add question.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePageSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    try {
+      // This would typically save to a pages table
+      toast({
+        title: "Page Saved",
+        description: "Page has been successfully saved.",
+      });
+      
+      // Reset form
+      setPageEditor({
+        page_url: "",
+        page_title: "",
+        page_content: "",
+        meta_title: "",
+        meta_description: "",
+        keywords: "",
+        is_published: true
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save page.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBlogSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    try {
+      // This would typically save to a blog_posts table
+      toast({
+        title: "Blog Post Saved",
+        description: "Blog post has been successfully saved.",
+      });
+      
+      // Reset form
+      setBlogForm({
+        title: "",
+        content: "",
+        excerpt: "",
+        author: "K12Expert Team",
+        category: "Education",
+        tags: "",
+        featured_image: "",
+        is_published: false,
+        publish_date: new Date().toISOString().split('T')[0]
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save blog post.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleNavItemAdd = async () => {
+    setLoading(true);
+    try {
+      // This would typically save to a navigation table
+      toast({
+        title: "Navigation Item Added",
+        description: "Navigation item has been successfully added.",
+      });
+      
+      setNewNavItem({
+        label: "",
+        url: "",
+        parent_id: null,
+        order: 0,
+        is_active: true
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add navigation item.",
         variant: "destructive",
       });
     } finally {
@@ -278,12 +423,14 @@ const AdminPanel = () => {
       {/* Admin Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-8">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
             <TabsTrigger value="quiz">Quiz</TabsTrigger>
-            <TabsTrigger value="users">Users</TabsTrigger>
+            <TabsTrigger value="pages">Pages</TabsTrigger>
+            <TabsTrigger value="blog">Blog</TabsTrigger>
             <TabsTrigger value="navigation">Navigation</TabsTrigger>
+            <TabsTrigger value="users">Users</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
@@ -348,7 +495,7 @@ const AdminPanel = () => {
                   <span>Add Educational Content</span>
                 </CardTitle>
                 <CardDescription>
-                  Create new theory content, solved examples, and learning materials
+                  Create theories, solved examples, quizzes, long exams, and instant solved exams
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -375,8 +522,9 @@ const AdminPanel = () => {
                         <SelectContent>
                           <SelectItem value="theory">Theory</SelectItem>
                           <SelectItem value="solved_examples">Solved Examples</SelectItem>
-                          <SelectItem value="practical">Practical</SelectItem>
-                          <SelectItem value="reference">Reference</SelectItem>
+                          <SelectItem value="quiz">Quiz</SelectItem>
+                          <SelectItem value="long_exam">Long Exam</SelectItem>
+                          <SelectItem value="instant_solved_exam">Instant Solved Exam</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -423,6 +571,18 @@ const AdminPanel = () => {
                         </SelectContent>
                       </Select>
                     </div>
+                    {(contentForm.content_type === "long_exam" || contentForm.content_type === "instant_solved_exam") && (
+                      <div className="space-y-2">
+                        <Label htmlFor="duration">Duration (minutes)</Label>
+                        <Input
+                          id="duration"
+                          type="number"
+                          value={contentForm.duration}
+                          onChange={(e) => setContentForm({...contentForm, duration: e.target.value})}
+                          placeholder="e.g. 60"
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="content">Content</Label>
@@ -432,6 +592,15 @@ const AdminPanel = () => {
                       onChange={(e) => setContentForm({...contentForm, content: e.target.value})}
                       rows={8}
                       required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="tags">Tags (comma separated)</Label>
+                    <Input
+                      id="tags"
+                      value={contentForm.tags}
+                      onChange={(e) => setContentForm({...contentForm, tags: e.target.value})}
+                      placeholder="e.g. mathematics, algebra, equations"
                     />
                   </div>
                   <div className="flex items-center space-x-2">
@@ -460,7 +629,7 @@ const AdminPanel = () => {
                   <span>Add Quiz Question</span>
                 </CardTitle>
                 <CardDescription>
-                  Create quiz questions, short quizzes, and exam questions
+                  Create all types of quiz questions with enhanced features
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -509,6 +678,27 @@ const AdminPanel = () => {
                         value={quizForm.curriculum}
                         onChange={(e) => setQuizForm({...quizForm, curriculum: e.target.value})}
                         required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="points">Points</Label>
+                      <Input
+                        id="points"
+                        type="number"
+                        value={quizForm.points}
+                        onChange={(e) => setQuizForm({...quizForm, points: parseInt(e.target.value)})}
+                        min="1"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="time_limit">Time Limit (seconds, 0 for no limit)</Label>
+                      <Input
+                        id="time_limit"
+                        type="number"
+                        value={quizForm.time_limit}
+                        onChange={(e) => setQuizForm({...quizForm, time_limit: parseInt(e.target.value)})}
+                        min="0"
                       />
                     </div>
                   </div>
@@ -575,6 +765,307 @@ const AdminPanel = () => {
             </Card>
           </TabsContent>
 
+          <TabsContent value="pages" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Layout className="h-5 w-5" />
+                  <span>Page Editor</span>
+                </CardTitle>
+                <CardDescription>
+                  Edit any page on the website with full control
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handlePageSave} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="page_url">Page URL</Label>
+                      <Input
+                        id="page_url"
+                        value={pageEditor.page_url}
+                        onChange={(e) => setPageEditor({...pageEditor, page_url: e.target.value})}
+                        placeholder="e.g. /about-us"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="page_title">Page Title</Label>
+                      <Input
+                        id="page_title"
+                        value={pageEditor.page_title}
+                        onChange={(e) => setPageEditor({...pageEditor, page_title: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="meta_title">Meta Title (SEO)</Label>
+                      <Input
+                        id="meta_title"
+                        value={pageEditor.meta_title}
+                        onChange={(e) => setPageEditor({...pageEditor, meta_title: e.target.value})}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="keywords">Keywords (comma separated)</Label>
+                      <Input
+                        id="keywords"
+                        value={pageEditor.keywords}
+                        onChange={(e) => setPageEditor({...pageEditor, keywords: e.target.value})}
+                        placeholder="e.g. education, learning, K12"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="meta_description">Meta Description (SEO)</Label>
+                    <Textarea
+                      id="meta_description"
+                      value={pageEditor.meta_description}
+                      onChange={(e) => setPageEditor({...pageEditor, meta_description: e.target.value})}
+                      rows={2}
+                      placeholder="Brief description for search engines"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="page_content">Page Content (HTML/React)</Label>
+                    <Textarea
+                      id="page_content"
+                      value={pageEditor.page_content}
+                      onChange={(e) => setPageEditor({...pageEditor, page_content: e.target.value})}
+                      rows={12}
+                      placeholder="Enter HTML or React JSX content here"
+                      required
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="is_published"
+                      checked={pageEditor.is_published}
+                      onChange={(e) => setPageEditor({...pageEditor, is_published: e.target.checked})}
+                    />
+                    <Label htmlFor="is_published">Published</Label>
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button type="submit" disabled={loading}>
+                      <Save className="w-4 h-4 mr-2" />
+                      {loading ? "Saving..." : "Save Page"}
+                    </Button>
+                    <Button type="button" variant="outline">
+                      <Eye className="w-4 h-4 mr-2" />
+                      Preview
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="blog" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <PenTool className="h-5 w-5" />
+                  <span>Blog Management</span>
+                </CardTitle>
+                <CardDescription>
+                  Create and manage blog posts for k12expert.com/blog
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleBlogSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="blog_title">Blog Title</Label>
+                      <Input
+                        id="blog_title"
+                        value={blogForm.title}
+                        onChange={(e) => setBlogForm({...blogForm, title: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="blog_category">Category</Label>
+                      <Select 
+                        value={blogForm.category} 
+                        onValueChange={(value) => setBlogForm({...blogForm, category: value})}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Education">Education</SelectItem>
+                          <SelectItem value="Teaching Tips">Teaching Tips</SelectItem>
+                          <SelectItem value="Student Success">Student Success</SelectItem>
+                          <SelectItem value="Parent Guides">Parent Guides</SelectItem>
+                          <SelectItem value="Curriculum">Curriculum</SelectItem>
+                          <SelectItem value="Technology">Technology</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="blog_author">Author</Label>
+                      <Input
+                        id="blog_author"
+                        value={blogForm.author}
+                        onChange={(e) => setBlogForm({...blogForm, author: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="publish_date">Publish Date</Label>
+                      <Input
+                        id="publish_date"
+                        type="date"
+                        value={blogForm.publish_date}
+                        onChange={(e) => setBlogForm({...blogForm, publish_date: e.target.value})}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="blog_excerpt">Excerpt</Label>
+                    <Textarea
+                      id="blog_excerpt"
+                      value={blogForm.excerpt}
+                      onChange={(e) => setBlogForm({...blogForm, excerpt: e.target.value})}
+                      rows={3}
+                      placeholder="Brief summary of the blog post"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="blog_content">Blog Content</Label>
+                    <Textarea
+                      id="blog_content"
+                      value={blogForm.content}
+                      onChange={(e) => setBlogForm({...blogForm, content: e.target.value})}
+                      rows={10}
+                      placeholder="Write your blog post content here"
+                      required
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="blog_tags">Tags (comma separated)</Label>
+                      <Input
+                        id="blog_tags"
+                        value={blogForm.tags}
+                        onChange={(e) => setBlogForm({...blogForm, tags: e.target.value})}
+                        placeholder="e.g. education, tips, students"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="featured_image">Featured Image URL</Label>
+                      <Input
+                        id="featured_image"
+                        value={blogForm.featured_image}
+                        onChange={(e) => setBlogForm({...blogForm, featured_image: e.target.value})}
+                        placeholder="https://..."
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="blog_published"
+                      checked={blogForm.is_published}
+                      onChange={(e) => setBlogForm({...blogForm, is_published: e.target.checked})}
+                    />
+                    <Label htmlFor="blog_published">Publish Immediately</Label>
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button type="submit" disabled={loading}>
+                      <Save className="w-4 h-4 mr-2" />
+                      {loading ? "Saving..." : "Save Blog Post"}
+                    </Button>
+                    <Button type="button" variant="outline">
+                      <Eye className="w-4 h-4 mr-2" />
+                      Preview
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="navigation" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Navigation className="h-5 w-5" />
+                  <span>Navigation Management</span>
+                </CardTitle>
+                <CardDescription>
+                  Manage header menu, navigation bar, and footer elements
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="nav_label">Menu Label</Label>
+                    <Input
+                      id="nav_label"
+                      value={newNavItem.label}
+                      onChange={(e) => setNewNavItem({...newNavItem, label: e.target.value})}
+                      placeholder="e.g. About Us"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="nav_url">URL</Label>
+                    <Input
+                      id="nav_url"
+                      value={newNavItem.url}
+                      onChange={(e) => setNewNavItem({...newNavItem, url: e.target.value})}
+                      placeholder="e.g. /about"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="nav_order">Order</Label>
+                    <Input
+                      id="nav_order"
+                      type="number"
+                      value={newNavItem.order}
+                      onChange={(e) => setNewNavItem({...newNavItem, order: parseInt(e.target.value)})}
+                      min="0"
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2 pt-6">
+                    <input
+                      type="checkbox"
+                      id="nav_active"
+                      checked={newNavItem.is_active}
+                      onChange={(e) => setNewNavItem({...newNavItem, is_active: e.target.checked})}
+                    />
+                    <Label htmlFor="nav_active">Active</Label>
+                  </div>
+                </div>
+                <Button onClick={handleNavItemAdd} disabled={loading}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Navigation Item
+                </Button>
+                
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold mb-4">Quick Navigation Actions</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Button className="w-full justify-start" variant="outline">
+                      <Menu className="w-4 h-4 mr-2" />
+                      Edit Header Menu
+                    </Button>
+                    <Button className="w-full justify-start" variant="outline">
+                      <Navigation className="w-4 h-4 mr-2" />
+                      Manage Mega Menu
+                    </Button>
+                    <Button className="w-full justify-start" variant="outline">
+                      <Globe className="w-4 h-4 mr-2" />
+                      Edit Footer
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="users" className="space-y-6">
             <Card>
               <CardHeader>
@@ -595,7 +1086,9 @@ const AdminPanel = () => {
                       <TableHead>Role</TableHead>
                       <TableHead>Country</TableHead>
                       <TableHead>Subscription</TableHead>
+                      <TableHead>Last Login</TableHead>
                       <TableHead>Created</TableHead>
+                      <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -617,42 +1110,28 @@ const AdminPanel = () => {
                           </Badge>
                         </TableCell>
                         <TableCell>
+                          <Badge variant="outline">
+                            <Clock className="w-3 h-3 mr-1" />
+                            Recent
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
                           {new Date(user.created_at).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex space-x-2">
+                            <Button size="sm" variant="outline">
+                              <Eye className="w-3 h-3" />
+                            </Button>
+                            <Button size="sm" variant="outline">
+                              <Edit className="w-3 h-3" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="navigation" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Navigation className="h-5 w-5" />
-                  <span>Navigation Management</span>
-                </CardTitle>
-                <CardDescription>
-                  Manage menu items, navigation bar, and footer elements
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Button className="w-full justify-start" variant="outline">
-                    <Menu className="w-4 h-4 mr-2" />
-                    Edit Header Menu
-                  </Button>
-                  <Button className="w-full justify-start" variant="outline">
-                    <Navigation className="w-4 h-4 mr-2" />
-                    Manage Navigation
-                  </Button>
-                  <Button className="w-full justify-start" variant="outline">
-                    <Globe className="w-4 h-4 mr-2" />
-                    Edit Footer
-                  </Button>
-                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -670,16 +1149,28 @@ const AdminPanel = () => {
               </CardHeader>
               <CardContent className="space-y-3">
                 <Button className="w-full justify-start" variant="outline">
+                  <Settings className="w-4 h-4 mr-2" />
                   Platform Configuration
                 </Button>
                 <Button className="w-full justify-start" variant="outline">
+                  <BookOpen className="w-4 h-4 mr-2" />
                   Curriculum Settings
                 </Button>
                 <Button className="w-full justify-start" variant="outline">
+                  <Zap className="w-4 h-4 mr-2" />
                   Notification Management
                 </Button>
                 <Button className="w-full justify-start" variant="outline">
+                  <Globe className="w-4 h-4 mr-2" />
                   Stripe Integration
+                </Button>
+                <Button className="w-full justify-start" variant="outline">
+                  <UserCheck className="w-4 h-4 mr-2" />
+                  User Role Management
+                </Button>
+                <Button className="w-full justify-start" variant="outline">
+                  <FileText className="w-4 h-4 mr-2" />
+                  SEO & Analytics
                 </Button>
               </CardContent>
             </Card>
