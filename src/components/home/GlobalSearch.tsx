@@ -10,14 +10,16 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
-import { Search, Book, GraduationCap, Globe, Library } from "lucide-react";
+import { Search, Book, GraduationCap, Globe, Library, BookOpen, Users } from "lucide-react";
 import { allSubjects, allGrades } from "./SubjectsGradesMenu";
 import { continentData } from "@/data/continentData";
 import { useNavigate } from "react-router-dom";
 
+// Base subjects and grades
 const subjects = allSubjects.map(item => ({ ...item, type: 'Subject' as const, icon: Book }));
 const grades = allGrades.map(item => ({ ...item, type: 'Grade' as const, icon: GraduationCap }));
 
+// Countries
 const countries = Object.values(continentData).flatMap(continent => 
   continent.countries.map(country => ({
     title: country.name,
@@ -28,15 +30,83 @@ const countries = Object.values(continentData).flatMap(continent =>
   }))
 );
 
+// Curriculums with country names in brackets
 const curriculums = Object.values(continentData).flatMap(continent => 
   continent.countries.flatMap(country => 
     country.curriculums.map(curriculum => ({
-      title: curriculum.name,
+      title: `${curriculum.name} (${country.name})`,
       href: `/curriculums/${curriculum.name.toLowerCase().replace(/ /g, '-').replace(/\(|\)/g, '')}`,
-      description: `Used in ${country.name}`,
+      description: `Used in ${country.name} - Covers ${curriculum.subjects.join(', ')}`,
       type: 'Curriculum' as const,
       icon: Library,
     }))
+  )
+).filter((v,i,a)=>a.findIndex(t=>(t.title === v.title))===i);
+
+// Subject-Grade combinations
+const subjectGradeCombinations = allSubjects.flatMap(subject =>
+  allGrades.map(grade => ({
+    title: `${subject.title} - ${grade.title}`,
+    href: `/subjects/${subject.title.toLowerCase().replace(/ /g, '-')}/grades/${grade.title.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
+    description: `${subject.title} curriculum for ${grade.title}`,
+    type: 'Subject-Grade' as const,
+    icon: BookOpen,
+  }))
+);
+
+// Subject-Curriculum combinations
+const subjectCurriculumCombinations = allSubjects.flatMap(subject =>
+  Object.values(continentData).flatMap(continent =>
+    continent.countries.flatMap(country =>
+      country.curriculums
+        .filter(curriculum => curriculum.subjects.some(s => s.toLowerCase().includes(subject.title.toLowerCase()) || subject.title.toLowerCase().includes(s.toLowerCase())))
+        .map(curriculum => ({
+          title: `${subject.title} - ${curriculum.name} (${country.name})`,
+          href: `/subjects/${subject.title.toLowerCase().replace(/ /g, '-')}/curriculums/${curriculum.name.toLowerCase().replace(/ /g, '-').replace(/\(|\)/g, '')}`,
+          description: `${subject.title} in ${curriculum.name} curriculum from ${country.name}`,
+          type: 'Subject-Curriculum' as const,
+          icon: Users,
+        }))
+    )
+  )
+).filter((v,i,a)=>a.findIndex(t=>(t.title === v.title))===i);
+
+// Grade-Curriculum combinations
+const gradeCurriculumCombinations = allGrades.flatMap(grade =>
+  Object.values(continentData).flatMap(continent =>
+    continent.countries.flatMap(country =>
+      country.curriculums
+        .filter(curriculum => curriculum.grades.some(g => g.toLowerCase().includes(grade.title.toLowerCase()) || grade.title.toLowerCase().includes(g.toLowerCase())))
+        .map(curriculum => ({
+          title: `${grade.title} - ${curriculum.name} (${country.name})`,
+          href: `/grades/${grade.title.toLowerCase().replace(/[^a-z0-9]/g, '-')}/curriculums/${curriculum.name.toLowerCase().replace(/ /g, '-').replace(/\(|\)/g, '')}`,
+          description: `${grade.title} level in ${curriculum.name} curriculum from ${country.name}`,
+          type: 'Grade-Curriculum' as const,
+          icon: Users,
+        }))
+    )
+  )
+).filter((v,i,a)=>a.findIndex(t=>(t.title === v.title))===i);
+
+// Subject-Grade-Curriculum combinations
+const subjectGradeCurriculumCombinations = allSubjects.flatMap(subject =>
+  allGrades.flatMap(grade =>
+    Object.values(continentData).flatMap(continent =>
+      continent.countries.flatMap(country =>
+        country.curriculums
+          .filter(curriculum => 
+            curriculum.subjects.some(s => s.toLowerCase().includes(subject.title.toLowerCase()) || subject.title.toLowerCase().includes(s.toLowerCase())) &&
+            curriculum.grades.some(g => g.toLowerCase().includes(grade.title.toLowerCase()) || grade.title.toLowerCase().includes(g.toLowerCase()))
+          )
+          .map(curriculum => ({
+            title: `${subject.title} - ${grade.title} - ${curriculum.name} (${country.name})`,
+            href: `/subjects/${subject.title.toLowerCase().replace(/ /g, '-')}/grades/${grade.title.toLowerCase().replace(/[^a-z0-9]/g, '-')}/curriculums/${curriculum.name.toLowerCase().replace(/ /g, '-').replace(/\(|\)/g, '')}`,
+            description: `${subject.title} for ${grade.title} in ${curriculum.name} curriculum from ${country.name}`,
+            type: 'Subject-Grade-Curriculum' as const,
+            icon: Library,
+          }))
+      )
+    )
   )
 ).filter((v,i,a)=>a.findIndex(t=>(t.title === v.title))===i);
 
@@ -75,9 +145,10 @@ export const GlobalSearch = () => {
         </kbd>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Search for subjects, grades, countries..." />
+        <CommandInput placeholder="Search for subjects, grades, countries, curriculums..." />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
+          
           <CommandGroup heading="Subjects">
             {subjects.map((item) => (
               <CommandItem
@@ -89,6 +160,7 @@ export const GlobalSearch = () => {
               </CommandItem>
             ))}
           </CommandGroup>
+          
           <CommandSeparator />
           <CommandGroup heading="Grades & Levels">
             {grades.map((item) => (
@@ -101,6 +173,7 @@ export const GlobalSearch = () => {
               </CommandItem>
             ))}
           </CommandGroup>
+          
           <CommandSeparator />
           <CommandGroup heading="Countries">
             {countries.map((item) => (
@@ -113,9 +186,62 @@ export const GlobalSearch = () => {
               </CommandItem>
             ))}
           </CommandGroup>
-           <CommandSeparator />
+          
+          <CommandSeparator />
           <CommandGroup heading="Curriculums">
             {curriculums.map((item) => (
+              <CommandItem
+                key={item.href}
+                onSelect={() => runCommand(() => navigate(item.href))}
+              >
+                <item.icon className="mr-2 h-4 w-4" />
+                <span>{item.title}</span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          
+          <CommandSeparator />
+          <CommandGroup heading="Subject + Grade Combinations">
+            {subjectGradeCombinations.slice(0, 20).map((item) => (
+              <CommandItem
+                key={item.href}
+                onSelect={() => runCommand(() => navigate(item.href))}
+              >
+                <item.icon className="mr-2 h-4 w-4" />
+                <span>{item.title}</span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          
+          <CommandSeparator />
+          <CommandGroup heading="Subject + Curriculum Combinations">
+            {subjectCurriculumCombinations.slice(0, 20).map((item) => (
+              <CommandItem
+                key={item.href}
+                onSelect={() => runCommand(() => navigate(item.href))}
+              >
+                <item.icon className="mr-2 h-4 w-4" />
+                <span>{item.title}</span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          
+          <CommandSeparator />
+          <CommandGroup heading="Grade + Curriculum Combinations">
+            {gradeCurriculumCombinations.slice(0, 20).map((item) => (
+              <CommandItem
+                key={item.href}
+                onSelect={() => runCommand(() => navigate(item.href))}
+              >
+                <item.icon className="mr-2 h-4 w-4" />
+                <span>{item.title}</span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          
+          <CommandSeparator />
+          <CommandGroup heading="Subject + Grade + Curriculum Combinations">
+            {subjectGradeCurriculumCombinations.slice(0, 15).map((item) => (
               <CommandItem
                 key={item.href}
                 onSelect={() => runCommand(() => navigate(item.href))}
