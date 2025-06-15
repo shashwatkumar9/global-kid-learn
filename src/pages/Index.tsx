@@ -7,6 +7,7 @@ import { HeroSection } from "@/components/home/HeroSection";
 import { ContentCategories } from "@/components/home/ContentCategories";
 import { UserTypeSelection } from "@/components/home/UserTypeSelection";
 import { FeaturesSection } from "@/components/home/FeaturesSection";
+import { Footer } from "@/components/home/Footer";
 
 const Index = () => {
   const [user, setUser] = useState<any>(null);
@@ -55,6 +56,8 @@ const Index = () => {
         {!user && <UserTypeSelection />}
         <FeaturesSection />
       </main>
+
+      <Footer />
     </div>
   );
 };
