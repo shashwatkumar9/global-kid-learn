@@ -76,13 +76,13 @@ ListItem.displayName = "ListItem";
 
 export const SubjectsGradesMenu = () => {
   return (
-    <div className="flex space-x-4">
+    <div className="flex space-x-4 relative z-50">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuTrigger className="text-sm text-gray-600 hover:text-blue-600 font-medium">Subjects</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <div className="w-[800px] p-6">
+            <NavigationMenuContent className="z-50">
+              <div className="w-[800px] p-6 bg-white shadow-xl border">
                 <div className="grid grid-cols-3 gap-6">
                   {Object.entries(subjectsByCategory).map(([category, subjects]) => (
                     <div key={category} className="flex flex-col">
@@ -114,8 +114,8 @@ export const SubjectsGradesMenu = () => {
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuTrigger className="text-sm text-gray-600 hover:text-blue-600 font-medium">Grades & Levels</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <div className="w-[600px] p-6">
+            <NavigationMenuContent className="z-50">
+              <div className="w-[600px] p-6 bg-white shadow-xl border">
                 <div className="grid grid-cols-2 gap-4">
                   {allGrades.map((grade) => (
                     <ListItem key={grade.title} title={grade.title} href={grade.href}>

@@ -29,9 +29,9 @@ export const Header = ({ user, profile, onDashboardNavigation }: HeaderProps) =>
   return (
     <div className="w-full">
       {/* Top Navigation Bar */}
-      <div className="bg-gray-50 border-b border-gray-200">
+      <div className="bg-gray-50 border-b border-gray-200 relative z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-10 text-sm">
+          <div className="flex justify-between items-center h-12 text-sm">
             <div className="flex items-center space-x-6">
               <a href="/about" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
                 <Users className="w-4 h-4" />
@@ -58,7 +58,7 @@ export const Header = ({ user, profile, onDashboardNavigation }: HeaderProps) =>
       </div>
 
       {/* Main Header */}
-      <header className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
+      <header className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
@@ -99,12 +99,8 @@ export const Header = ({ user, profile, onDashboardNavigation }: HeaderProps) =>
       </header>
 
       {/* Countries Menu Bar */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center items-center h-12">
-            <ContinentCountriesMenu />
-          </div>
-        </div>
+      <div className="bg-white border-b border-gray-200 relative z-30">
+        <ContinentCountriesMenu />
       </div>
     </div>
   );
