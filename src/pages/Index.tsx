@@ -17,7 +17,8 @@ import {
   FileText,
   Timer,
   Calculator,
-  Lightbulb
+  Lightbulb,
+  BarChart3
 } from "lucide-react";
 
 const Index = () => {
