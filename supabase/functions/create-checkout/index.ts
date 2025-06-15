@@ -13,64 +13,70 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const supabaseClient = createClient(
-    Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_ANON_KEY") ?? ""
-  );
-
   try {
+    const supabaseClient = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_ANON_KEY") ?? ""
+    );
+
+    // Get the authorization header from the request
     const authHeader = req.headers.get("Authorization")!;
     const token = authHeader.replace("Bearer ", "");
     const { data } = await supabaseClient.auth.getUser(token);
     const user = data.user;
-    if (!user?.email) throw new Error("User not authenticated or email not available");
 
-    const { plan } = await req.json();
-    if (!plan || !['monthly', 'yearly'].includes(plan)) {
-      throw new Error("Invalid plan specified");
+    if (!user?.email) {
+      throw new Error("User not authenticated");
     }
 
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", { apiVersion: "2023-10-16" });
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
+      apiVersion: "2023-10-16",
+    });
+
+    // Check if customer already exists
+    const customers = await stripe.customers.list({
+      email: user.email,
+      limit: 1,
+    });
+
     let customerId;
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
     }
 
-    const prices = {
-      monthly: {
-        currency: "usd",
-        product_data: { name: "K12Expert Premium - Monthly" },
-        unit_amount: 399, // $3.99
-        recurring: { interval: "month" },
-      },
-      yearly: {
-        currency: "usd", 
-        product_data: { name: "K12Expert Premium - Yearly" },
-        unit_amount: 3499, // $34.99
-        recurring: { interval: "year" },
-      }
-    };
-
+    // Create checkout session for subscription
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
       line_items: [
         {
-          price_data: prices[plan as keyof typeof prices],
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: "K12Expert Premium Subscription",
+              description: "Access to all premium features and unlimited student accounts",
+            },
+            unit_amount: 2999, // $29.99
+            recurring: {
+              interval: "month",
+            },
+          },
           quantity: 1,
         },
       ],
       mode: "subscription",
-      success_url: `${req.headers.get("origin")}/subscription-success`,
+      success_url: `${req.headers.get("origin")}/subscription-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.get("origin")}/subscription`,
+      metadata: {
+        user_id: user.id,
+      },
     });
 
     return new Response(JSON.stringify({ url: session.url }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
-  } catch (error: any) {
+  } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
