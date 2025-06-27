@@ -1,51 +1,79 @@
 
 import * as React from "react";
-import { Curriculum } from "@/data/continentData";
+import { useNavigate } from "react-router-dom";
+import { Curriculum, Country } from "@/data/continentData";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { BookOpen, GraduationCap } from "lucide-react";
 
 interface CurriculumCardProps {
   curriculum: Curriculum;
+  country: Country;
+  continent: string;
 }
 
-export const CurriculumCard = ({ curriculum }: CurriculumCardProps) => {
+export const CurriculumCard = ({ curriculum, country, continent }: CurriculumCardProps) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    const continentSlug = continent.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    const countrySlug = country.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    const curriculumSlug = curriculum.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    navigate(`/${continentSlug}/${countrySlug}/${curriculumSlug}`);
+  };
+
   return (
-    <div className="bg-gradient-to-br from-white to-gray-50 rounded-lg p-4 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
-      <h5 className="font-semibold text-lg mb-3 text-blue-700 border-b border-blue-200 pb-2">
-        {curriculum.name}
-      </h5>
-      
-      <div className="mb-4">
-        <p className="text-sm font-medium text-gray-700 mb-2 flex items-center">
-          <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-          Subjects
-        </p>
-        <div className="space-y-1 max-h-24 overflow-y-auto">
-          {curriculum.subjects.map((subject) => (
-            <div 
-              key={subject}
-              className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded hover:bg-blue-100 cursor-pointer transition-colors border border-blue-200"
-            >
-              {subject}
-            </div>
-          ))}
+    <Card 
+      className="hover:shadow-lg transition-all duration-200 cursor-pointer border-l-4 border-l-blue-500 hover:border-l-blue-600"
+      onClick={handleClick}
+    >
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base font-semibold text-blue-700 hover:text-blue-800 transition-colors">
+          {curriculum.name}
+        </CardTitle>
+        <CardDescription className="text-xs">
+          Click to explore curriculum details
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div>
+          <div className="flex items-center space-x-1 mb-2">
+            <BookOpen className="w-3 h-3 text-green-600" />
+            <span className="text-xs font-medium text-gray-700">Subjects</span>
+          </div>
+          <div className="flex flex-wrap gap-1">
+            {curriculum.subjects.slice(0, 3).map((subject) => (
+              <Badge key={subject} variant="secondary" className="text-xs px-1 py-0">
+                {subject}
+              </Badge>
+            ))}
+            {curriculum.subjects.length > 3 && (
+              <Badge variant="outline" className="text-xs px-1 py-0">
+                +{curriculum.subjects.length - 3}
+              </Badge>
+            )}
+          </div>
         </div>
-      </div>
-      
-      <div>
-        <p className="text-sm font-medium text-gray-700 mb-2 flex items-center">
-          <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
-          Grades
-        </p>
-        <div className="flex flex-wrap gap-1">
-          {curriculum.grades.map((grade) => (
-            <span 
-              key={grade}
-              className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full hover:bg-orange-200 cursor-pointer transition-colors border border-orange-200"
-            >
-              {grade}
-            </span>
-          ))}
+        
+        <div>
+          <div className="flex items-center space-x-1 mb-2">
+            <GraduationCap className="w-3 h-3 text-purple-600" />
+            <span className="text-xs font-medium text-gray-700">Grades</span>
+          </div>
+          <div className="flex flex-wrap gap-1">
+            {curriculum.grades.slice(0, 4).map((grade) => (
+              <Badge key={grade} variant="outline" className="text-xs px-1 py-0">
+                {grade}
+              </Badge>
+            ))}
+            {curriculum.grades.length > 4 && (
+              <Badge variant="outline" className="text-xs px-1 py-0">
+                +{curriculum.grades.length - 4}
+              </Badge>
+            )}
+          </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };

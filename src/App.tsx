@@ -26,6 +26,12 @@ import CurriculumPage from "./pages/CurriculumPage";
 import SubjectGradeCurriculumPage from "./pages/SubjectGradeCurriculumPage";
 import SubjectGradeCurriculumTheoryPage from "./pages/SubjectGradeCurriculumTheoryPage";
 import SubjectGradeCurriculumQuizPage from "./pages/SubjectGradeCurriculumQuizPage";
+// New hierarchical pages
+import ContinentPage from "./pages/ContinentPage";
+import CountryDetailPage from "./pages/CountryDetailPage";
+import CurriculumDetailPage from "./pages/CurriculumDetailPage";
+import SubjectDetailPage from "./pages/SubjectDetailPage";
+import GradeDetailPage from "./pages/GradeDetailPage";
 
 const queryClient = new QueryClient();
 
@@ -50,18 +56,38 @@ const App = () => (
               <Route path="/solved-examples" element={<SolvedExamples />} />
               <Route path="/short-quiz" element={<ShortQuiz />} />
               <Route path="/exam" element={<Exam />} />
+
+              {/* Legacy routes for backward compatibility */}
               <Route path="/subjects/:subjectName" element={<SubjectPage />} />
               <Route path="/grades/:gradeName" element={<GradePage />} />
               <Route path="/countries/:countryName" element={<CountryPage />} />
               <Route path="/curriculums/:curriculumName" element={<CurriculumPage />} />
-              {/* Comprehensive subject-grade-curriculum routes */}
+
+              {/* New hierarchical routes - ORDER MATTERS! Most specific first */}
+              {/* 5-level routes: continent/country/curriculum/grade/subject */}
+              <Route path="/:continentName/:countryName/:curriculumName/:gradeName/:subjectName" element={<SubjectDetailPage />} />
+              
+              {/* 4-level routes: continent/country/curriculum/grade OR continent/country/curriculum/subject */}
+              <Route path="/:continentName/:countryName/:curriculumName/:gradeOrSubjectName" element={<GradeDetailPage />} />
+              
+              {/* 3-level routes: continent/country/curriculum */}
+              <Route path="/:continentName/:countryName/:curriculumName" element={<CurriculumDetailPage />} />
+              
+              {/* 2-level routes: continent/country */}
+              <Route path="/:continentName/:countryName" element={<CountryDetailPage />} />
+              
+              {/* 1-level routes: continent */}
+              <Route path="/:continentName" element={<ContinentPage />} />
+
+              {/* Comprehensive subject-grade-curriculum routes for backward compatibility */}
               <Route path="/subjects/:subjectName/grades/:gradeName/curriculums/:curriculumName" element={<SubjectGradeCurriculumPage />} />
               <Route path="/subjects/:subjectName/grades/:gradeName/curriculums/:curriculumName/theory" element={<SubjectGradeCurriculumTheoryPage />} />
               <Route path="/subjects/:subjectName/grades/:gradeName/curriculums/:curriculumName/quiz" element={<SubjectGradeCurriculumQuizPage />} />
               <Route path="/subjects/:subjectName/grades/:gradeName/curriculums/:curriculumName/solved-examples" element={<SubjectGradeCurriculumTheoryPage />} />
               <Route path="/subjects/:subjectName/grades/:gradeName/curriculums/:curriculumName/short-quiz" element={<SubjectGradeCurriculumQuizPage />} />
               <Route path="/subjects/:subjectName/grades/:gradeName/curriculums/:curriculumName/exam" element={<SubjectGradeCurriculumQuizPage />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              
+              {/* Catch-all route MUST be last */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

@@ -1,11 +1,13 @@
 
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import { continentData } from "@/data/continentData";
 import { ContinentContent } from "./ContinentContent";
 
 export const ContinentCountriesMenu = () => {
   const [activeContinent, setActiveContinent] = React.useState<string | null>(null);
   const timerRef = React.useRef<NodeJS.Timeout | null>(null);
+  const navigate = useNavigate();
 
   const handleMouseEnter = (continent: string) => {
     if (timerRef.current) {
@@ -17,13 +19,18 @@ export const ContinentCountriesMenu = () => {
   const handleMouseLeave = () => {
     timerRef.current = setTimeout(() => {
       setActiveContinent(null);
-    }, 200); // Delay to allow cursor to move to content
+    }, 200);
   };
 
   const cancelMouseLeave = () => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
+  };
+
+  const handleContinentClick = (continent: string) => {
+    const continentSlug = continent.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    navigate(`/${continentSlug}`);
   };
 
   React.useEffect(() => {
@@ -45,7 +52,8 @@ export const ContinentCountriesMenu = () => {
             <button
               key={continent}
               onMouseEnter={() => handleMouseEnter(continent)}
-              className={`group text-sm font-semibold border rounded-lg px-4 py-2 transition-all duration-200 focus:outline-none ${continentInfo.bgColor} ${activeContinent === continent ? 'shadow-md scale-105 border-gray-200 ' + continentInfo.bgColor.replace('hover:','') : 'border-transparent shadow-sm'}`}
+              onClick={() => handleContinentClick(continent)}
+              className={`group text-sm font-semibold border rounded-lg px-4 py-2 transition-all duration-200 focus:outline-none cursor-pointer ${continentInfo.bgColor} ${activeContinent === continent ? 'shadow-md scale-105 border-gray-200 ' + continentInfo.bgColor.replace('hover:','') : 'border-transparent shadow-sm'}`}
             >
               <span className={`${continentInfo.color} ${continentInfo.hoverColor} ${activeContinent === continent ? continentInfo.hoverColor.replace('group-hover:','') : ''}`}>
                 {continent}
